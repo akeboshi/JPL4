@@ -1,0 +1,8 @@
+現在の実装だと、コンストラクタしか持っていない簡単な作りになってしまっているの、interafaceは必要ない。
+しっかりと作り込むとすると
+interface LinkInterface {
+	LinkList add();
+	LinkList remove();
+	Iterator<LinkList> iterator();
+}
+などのInterfaceを作った方が良いように思われる。	
