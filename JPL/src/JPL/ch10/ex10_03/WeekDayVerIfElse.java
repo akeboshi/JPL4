@@ -1,9 +1,9 @@
 package JPL.ch10.ex10_03;
 
-class WeekDay{
+class WeekDayVerIfElse{
 	public static void main(String[] args) {
 		try {
-			if(getWorkDay(EnumWeek.SUNDAY) == true){
+			if(getWorkDay(EnumWeek.FRIDAY) == true){
 				System.out.println("はたらいてください");
 			} else {
 				System.out.println("やすみです");
@@ -14,13 +14,16 @@ class WeekDay{
 	}
 
 	public static boolean getWorkDay(EnumWeek enumWeek) throws Exception{
-		switch (enumWeek) {
-		case MONDAY: case TUESDAY: case WEDNESDAY:
-		case THURSDAY: case FRIDAY:
+		if(enumWeek == EnumWeek.MONDAY ||
+				enumWeek == EnumWeek.TUESDAY ||
+				enumWeek == EnumWeek.WEDNESDAY ||
+				enumWeek == EnumWeek.THURSDAY ||
+				enumWeek == EnumWeek.FRIDAY){
 			return true;
-		case SUNDAY: case SUTURDAY:
+		}else if (enumWeek == EnumWeek.SUNDAY ||
+				enumWeek == EnumWeek.SUTURDAY){
 			return false;
-		default:
+		}else{
 			throw new Exception();
 		}
 	}
