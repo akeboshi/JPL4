@@ -1,27 +1,27 @@
 package JPL.ch10.ex10_03;
 
-class WeekDay{
+class WeekDay {
 	public static void main(String[] args) {
-		try {
-			if(getWorkDay(EnumWeek.SUNDAY) == true){
-				System.out.println("はたらいてください");
-			} else {
-				System.out.println("やすみです");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (getWorkDay(EnumWeek.SUNDAY) == true) {
+			System.out.println("はたらいてください");
+		} else {
+			System.out.println("やすみです");
 		}
 	}
 
-	public static boolean getWorkDay(EnumWeek enumWeek) throws Exception{
+	public static boolean getWorkDay(EnumWeek enumWeek) {
 		switch (enumWeek) {
-		case MONDAY: case TUESDAY: case WEDNESDAY:
-		case THURSDAY: case FRIDAY:
+		case MONDAY:
+		case TUESDAY:
+		case WEDNESDAY:
+		case THURSDAY:
+		case FRIDAY:
 			return true;
-		case SUNDAY: case SUTURDAY:
+		case SUNDAY:
+		case SUTURDAY:
 			return false;
 		default:
-			throw new Exception();
+			throw new AssertionError();
 		}
 	}
 }
