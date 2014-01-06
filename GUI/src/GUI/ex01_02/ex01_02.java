@@ -1,35 +1,81 @@
 package GUI.ex01_02;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Button;
+import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Label;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Calendar;
 
-import java.util.*;
+/*
+ * http://www.javadrive.jp/tutorial/jcolorchooser/index3.html
+ * http://www.javadrive.jp/tutorial/font/index5.html
+ * http://terai.xrea.jp/Swing/AllFonts.html
+ */
 
-public class ex01_02 extends Frame {
+
+
+public class ex01_02 extends Frame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 
 	public static void main(String args[]) {
 
 		ex01_02 app = new ex01_02("");
-		app.addWindowListener(new java.awt.event.WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
+
+		app.setSize(660, 360);
+		app.setVisible(true);
+		app.startClock(app);
+	}
+
+	public ex01_02(String title) {
+		super(title);
+		generateMenu();
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent close) {
 				System.exit(0);
 			}
 		});
-		app.setSize(660, 360);
-		app.setVisible(true);
+	}
+
+	public void startClock(ex01_02 clock) {
 		while (true) {
 			try {
 				Thread.sleep(1000);
-				app.repaint();
+				clock.repaint();
 			} catch (InterruptedException e) {
 				System.out.println("error" + e);
 			}
 		}
 	}
 
-	public ex01_02(String title) {
-		super(title);
+	public void generateMenu() {
+		MenuBar menubar = new MenuBar();
+		setMenuBar(menubar);
+
+		Menu Menu1 = new Menu("ファイル");
+		menubar.add(Menu1);
+
+		MenuItem newm = new MenuItem("プロパティ");
+		MenuItem closem = new MenuItem("閉じる");
+
+		// メニューアイテムの追加
+		Menu1.add(newm);
+		Menu1.add(closem);
+
+		// イベントリスクの設定
+		newm.addActionListener(this);
+		closem.addActionListener(this);
+
 	}
 
 	public void paint(Graphics g) {
@@ -164,4 +210,37 @@ public class ex01_02 extends Frame {
 		g.fillRect(30 + x, 310, 80, 20);
 		g.fillRect(90 + x, 180, 20, 150);
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand() == "プロパティ") {
+			(new PropetyDialog()).start();
+		} else if (e.getActionCommand() == "閉じる") {
+			System.exit(0);
+		}
+	}
 }
+
+class PropetyDialog extends Frame{
+	 public void start() {
+		 Dialog dialog =new Dialog(new Frame());
+		 dialog.setSize(300, 150);
+		 dialog.setVisible(true);
+		 Button b = new Button("ok");
+		 dialog.setLayout(new FlowLayout());
+		 b.setPreferredSize(new Dimension(200, 100));
+		 dialog.add(b);
+		 dialog.setLayout(new FlowLayout());
+		 Label label = new Label("hello");
+		 dialog.add(label);
+		 //dialog.addWindowListener(this);
+		 dialog.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent close) {
+					System.exit(0);
+				}
+			});
+
+	 }
+}
+
+
