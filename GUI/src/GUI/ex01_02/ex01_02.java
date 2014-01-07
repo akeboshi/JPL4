@@ -82,14 +82,15 @@ public class ex01_02 extends Frame implements ActionListener {
 	public void paint(Graphics g) {
 		resize = propertyDialog.clockFontSizeDouble;
 		this.setSize((int) (660 / resize), (int) (360 / resize) + 50);
-		g.setColor(propertyDialog.backColor);
-		g.fillRect(0, 0, (int) (660 / resize) + 1,
-				(int) (360 / resize) + 50 + 1);
 
 		Dimension size = getSize();
 		Image back = createImage(size.width, size.height);
 
 		Graphics buffer = back.getGraphics();
+
+		buffer.setColor(propertyDialog.backColor);
+		buffer.fillRect(0, 0, (int) (660 / resize) + 1,
+				(int) (360 / resize) + 50 + 1);
 
 		Calendar cal1 = Calendar.getInstance();
 		int hour = cal1.get(Calendar.HOUR_OF_DAY);
