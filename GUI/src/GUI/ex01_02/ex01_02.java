@@ -568,6 +568,13 @@ class PropetyDialog extends Dialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "ok") {
+			if(textRed == null || textRed.getText().equals(""))textRed.setText("0");
+			if(textGreen == null || textGreen.getText().equals(""))textGreen.setText("0");
+			if(textBlue == null || textBlue.getText().equals(""))textBlue.setText("0");
+			if(backTextRed == null || backTextRed.getText().equals(""))backTextRed.setText("255");
+			if(backTextGreen == null || backTextGreen.getText().equals(""))backTextGreen.setText("255");
+			if(backTextBlue == null || backTextBlue.getText().equals(""))backTextBlue.setText("255");
+			if(clockFontSize == null || clockFontSize.getText().equals(""))clockFontSize.setText("1");
 			fontColor = new Color(Integer.parseInt(textRed.getText()),
 					Integer.parseInt(textGreen.getText()),
 					Integer.parseInt(textBlue.getText()));
