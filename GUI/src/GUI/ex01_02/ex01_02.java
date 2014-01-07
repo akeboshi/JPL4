@@ -502,19 +502,8 @@ class PropetyDialog extends Dialog implements ActionListener {
 		super(owner);
 		ClockMain = owner;
 		setSize(400, 200);
-		setResizable(true);
-
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent close) {
-				setVisible(false);
-			}
-		});
-
-	}
-
-	public void viewProperty() {
-		setVisible(true);
-
+		setResizable(false);
+		setTitle("プロパティ");
 		setLayout(new GridLayout(5, 1));
 		add(panel12);
 		add(panel34);
@@ -562,6 +551,18 @@ class PropetyDialog extends Dialog implements ActionListener {
 		okButton.addActionListener(this);
 		panel5.add(okButton);
 
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent close) {
+				setVisible(false);
+			}
+		});
+
+	}
+
+	public void viewProperty() {
+
+
+		setVisible(true);
 	}
 
 	@Override
