@@ -21,11 +21,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Calendar;
 
-/*
- * http://www.javadrive.jp/tutorial/jcolorchooser/index3.html
- * http://www.javadrive.jp/tutorial/font/index5.html
- * http://terai.xrea.jp/Swing/AllFonts.html
- */
 
 public class ex01_02 extends Frame implements ActionListener {
 	private static final long serialVersionUID = 1L;
@@ -584,7 +579,6 @@ class PropetyDialog extends Dialog implements ActionListener {
 			clockFontSizeDouble = 1 / Double.parseDouble(clockFontSize
 					.getText());
 			fontChoiceString = fontChoice.getSelectedItem();
-			System.out.println(fontChoice.getSelectedItem());
 			ClockMain.repaint();
 		}
 
