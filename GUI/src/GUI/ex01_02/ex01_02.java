@@ -48,10 +48,14 @@ public class ex01_02 extends Frame implements ActionListener {
 		});
 	}
 
+	public void update(Graphics g){
+		paint(g);
+	}
+
 	public void startClock(ex01_02 clock) {
 		while (true) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1);
 				clock.repaint();
 			} catch (InterruptedException e) {
 				System.out.println("error" + e);
@@ -101,7 +105,7 @@ public class ex01_02 extends Frame implements ActionListener {
 		set_time(buffer, 2, minute / 10);
 		set_time(buffer, 3, minute % 10);
 		set_time(buffer, 4, second / 10);
-		set_time(buffer, 5, second % 10);
+		set_time(buffer, 5, second %10);
 		g.drawImage(back, 0, 0, this);
 	}
 
