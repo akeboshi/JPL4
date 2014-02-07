@@ -4,7 +4,6 @@ class Color {
 	String colorName;
 	
 	public Color() {
-		colorName = "BLUE";
 	}
 	
 	public Color(String colorName){

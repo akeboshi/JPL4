@@ -1,29 +1,28 @@
 package JPL4.prac65;
 
 enum TraficSignal {
-	BLUE(new Color("BLUE")) {
+	BLUE {
 		@Override
 		Color getColor() {
+			Color color = new Color("BLUE");
 			return color;
 		}
 	},
-	YELLOW(new Color("YELLOW")) {
+	YELLOW {
 		@Override
 		Color getColor() {
+			Color color = new Color("YELLOW");
 			return color;
 		}
 	},
-	RED(new Color("RED")) {
+	RED {
 		@Override
 		Color getColor() {
+			Color color = new Color("RED");
 			return color;
 		}
 	};
 	
-	Color color;
-	private TraficSignal(Color color) {
-		this.color = color;
-	}
 	
 	abstract Color getColor();
 }

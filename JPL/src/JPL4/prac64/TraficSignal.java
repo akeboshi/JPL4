@@ -5,8 +5,12 @@ enum TraficSignal {
 	YELLOW(new Color("YELLOW")),
 	RED(new Color("RED"));
 	
-	Color color;
+	private final Color color;
 	private TraficSignal(Color color) {
 		this.color = color;
+	}
+	
+	public Color getColor(){
+		return color;
 	}
 }

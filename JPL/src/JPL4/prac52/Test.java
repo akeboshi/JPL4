@@ -11,9 +11,12 @@ class Test{
 		account.withdraw(330);
 		account.deposit(50);
 		
-		account.history().view();
-		account.history().index =0;
-		for(int i=0;i<11 ; i++)
-			System.out.println(account.history().next());
+		account.setHistory(account.history()); 
+		
+		account.getHistory().view();
+		while(account.history().next() != null){
+			System.out.println(account.getHistory().next());
+			account.getHistory().index++;
+		}
 	}
 }

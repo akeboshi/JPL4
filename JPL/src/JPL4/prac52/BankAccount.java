@@ -41,15 +41,25 @@ public class BankAccount {
 		history.addHistory(lastAct);
 	}
 	
-	public History history(){
+	public void setHistory(History history){
+		this.history = history;
+	}
+	
+	public History getHistory(){
 		return history;
 	}
 	
-	 public static class History {
+	public History history(){
+		return history.clone();
+	}
+	
+	 public static class History implements Cloneable{
            ArrayList<Action> actionHistory = new ArrayList<Action>();
            int index = 0;
            
-           public void addHistory(Action action){
+           private History(){}
+           
+           private void addHistory(Action action){
         	   if (actionHistory.size() < 10){
         		   actionHistory.add(action);
 	           } else {
@@ -65,10 +75,17 @@ public class BankAccount {
            
            public Action next(){
         	   if( index < actionHistory.size()){
-        		   return actionHistory.get(index++);
+        		   return actionHistory.get(index);
         	   }else{
         		   return null;
         	   }
+           }
+           
+           public History clone(){
+        	   History history = new History();
+        	   history.index = this.index;
+        	   history.actionHistory = (ArrayList<Action>) this.actionHistory.clone();
+        	   return history;
            }
 	 }
 }
