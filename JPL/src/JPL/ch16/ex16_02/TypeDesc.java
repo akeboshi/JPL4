@@ -18,7 +18,6 @@ public class TypeDesc {
 	}
 	
 	private java.io.PrintStream out = System.out;
-	
 	private static String[]
 			basic = {"class", "interface",
 		"enum", "annotation", "inner class"},
