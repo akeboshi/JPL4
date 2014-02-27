@@ -149,6 +149,14 @@ public class ThreadPool {
 			throw new NullPointerException();
 		if (!startFlag)
 			throw new IllegalStateException();
+		while(queue.size() >= queueSize){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		queue.add(runnable);
 		notifyAll();
 	}
