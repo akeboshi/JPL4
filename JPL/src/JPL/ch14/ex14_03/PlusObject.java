@@ -13,20 +13,15 @@ class PlusObject implements Runnable {
 	
 	@Override
 	public void run() {
-		try {
-			for (int i = 0; i < 10; i++) {
-				add(1);
-				System.out.println(val + " : "
-						+ Thread.currentThread().getName());
-				Thread.sleep(10);
-			}
-		} catch (InterruptedException e) {
-
+		for (int i = 0; i < 1000; i++) {
+			add(1);			
 		}
 	}
 
 	public synchronized void add(int val) {
 		this.val += val;
+		System.out.println(this.val + " : "
+				+ Thread.currentThread().getName());
 	}
 
 }

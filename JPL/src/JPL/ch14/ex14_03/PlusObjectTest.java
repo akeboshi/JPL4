@@ -19,17 +19,16 @@ public class PlusObjectTest {
 	@Test
 	public void test() {
 		Runnable runnable = new PlusObject(0);
-		Thread plusObject1 = new Thread(runnable, "plusObject1");
-		Thread plusObject2 = new Thread(runnable, "plusObject2");
-		
-		plusObject1.start();
-		plusObject2.start();
-		
+		Thread[] plusObject = new Thread[5];
+		for (int i = 0 ; i<5 ; i++){
+			plusObject[i] = new Thread(runnable,"Object" + i);
+			plusObject[i].start();
+		}
 		try {
-			Thread.sleep(100);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 		}
-		assertTrue( 20 == ((PlusObject)runnable).getVal());
+		assertTrue( 5000 == ((PlusObject)runnable).getVal());
 	}
 
 }
