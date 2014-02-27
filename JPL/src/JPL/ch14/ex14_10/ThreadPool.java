@@ -60,20 +60,10 @@ public class ThreadPool {
 								}
 							}
 							r = (Runnable) queue.removeFirst();
-						}
-						try {
 							Thread t = new Thread(r);
-							
 							t.start();
 							runnableThreadList.add(t);
-							try {
-								t.join();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							ThreadPool.this.notifyAll();
-						} catch (RuntimeException e) {
+
 						}
 					}
 				}
@@ -110,6 +100,9 @@ public class ThreadPool {
 
 		if (!startFlag)
 			throw new IllegalStateException();
+		else
+			startFlag = false;
+
 		while (!queue.isEmpty()) {
 			try {
 				wait();
@@ -117,17 +110,15 @@ public class ThreadPool {
 				e.printStackTrace();
 			}
 		}
-		if(!runnableThreadList.isEmpty())
 		for (Thread thread : runnableThreadList) {
 			try {
-				if(thread != null)
 				thread.join();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	/**
@@ -149,7 +140,7 @@ public class ThreadPool {
 			throw new NullPointerException();
 		if (!startFlag)
 			throw new IllegalStateException();
-		while(queue.size() >= queueSize){
+		while (queue.size() > queueSize) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
