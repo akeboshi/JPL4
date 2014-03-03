@@ -31,6 +31,7 @@ import java.util.Map;
 
 public class Interpret extends Frame implements ActionListener, MouseListener,
 		MouseMotionListener {
+	private static final String OK_BUTTON_NAME = "Set Class";
 	private static final String ARRAY_BUTTON_NAME = "Generate Array";
 	private static final String OBJ_BUTTON_NAME = "Generate Object";
 	private static final String SET_OBJ_NAME = "Set Object";
@@ -95,12 +96,16 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		add(inputTextField);
 
 		// OKボタン
-		Button okButton = new Button("ok");
+		Button okButton = new Button(OK_BUTTON_NAME);
 		okButton.setPreferredSize(new Dimension(200, 20));
 		okButton.addActionListener(this);
 		add(okButton);
 
 		// インスタンス生成用
+		// constructor用
+		constructorChoice.setEnabled(false);
+		add(constructorChoice);
+
 		generateObjButton.setPreferredSize(new Dimension(200, 20));
 		generateObjButton.addActionListener(this);
 		generateObjButton.setEnabled(false);
@@ -120,10 +125,6 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		setObjeButton.addActionListener(this);
 		setObjeButton.setEnabled(false);
 		add(setObjeButton);
-
-		// constructor用
-		constructorChoice.setEnabled(false);
-		add(constructorChoice);
 
 		// method用
 		methodsChoice.setEnabled(false);
@@ -163,7 +164,7 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand() == "ok") {
+		if (e.getActionCommand() == OK_BUTTON_NAME) {
 			bufClass = null;
 			inputedText = inputTextField.getText();
 			try {
@@ -174,9 +175,16 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 			if (bufClass != null) {
 				generateArrayButton.setEnabled(true);
 				generateObjButton.setEnabled(true);
+				constructors = bufClass.getDeclaredConstructors();
+				constructorChoice.removeAll();
+				for (Constructor<?> con : constructors) {
+					constructorChoice.add(con.getName());
+				}
+				constructorChoice.setEnabled(true);
 			} else {
 				generateArrayButton.setEnabled(false);
 				generateObjButton.setEnabled(false);
+				constructorChoice.setEnabled(false);
 			}
 		} else if (e.getActionCommand() == OBJ_BUTTON_NAME) {
 			try {
@@ -187,23 +195,13 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			classChoice.setEnabled(true);
-			setObjeButton.setEnabled(true);
-			classChoice.add(classNum + " : " + bufClass.getName());
-			try {
-				classMap.put(classNum.toString(), bufClass.newInstance());
-			} catch (InstantiationException | IllegalAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			classNum++;
+			ConstructorDialog cond = new ConstructorDialog(this, constructorChoice.getSelectedItem(), constructors[constructorChoice.getSelectedIndex()],classMap);
+			cond.viewProperty();
 		} else if (e.getActionCommand() == ARRAY_BUTTON_NAME) {
 
 		} else if (e.getActionCommand() == SET_OBJ_NAME) {
 			setClass = clazz.get(classChoice.getSelectedIndex());
-			Integer test;
-			test = ((Integer) classChoice.getSelectedIndex());
-			setInstance = classMap.get(test.toString());
+			setInstance = classMap.get(((Integer) classChoice.getSelectedIndex()).toString());
 
 			fields = setClass.getDeclaredFields();
 			fieldChoice.removeAll();
@@ -232,13 +230,6 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 				doMethodButton.setEnabled(false);
 			}
 
-			constructors = setClass.getDeclaredConstructors();
-			constructorChoice.removeAll();
-			for (Constructor<?> con : constructors) {
-				constructorChoice.add(con.getName());
-			}
-			constructorChoice.setEnabled(true);
-
 		} else if (e.getActionCommand() == CHANGE_FIELD_NAME) {
 			ChangeFieldDialog cfd = new ChangeFieldDialog(this,
 					fieldChoice.getSelectedItem(), setInstance,
@@ -254,6 +245,14 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		}
 	}
 
+	<T> void addInstance(T instance){
+		classChoice.setEnabled(true);
+		setObjeButton.setEnabled(true);
+		classChoice.add(classNum + " : " + instance.getClass());
+		classMap.put(classNum.toString(), instance);
+		classNum++;
+	}
+	
 	public String getTestString() {
 		System.out.println("getString");
 		return testString;
