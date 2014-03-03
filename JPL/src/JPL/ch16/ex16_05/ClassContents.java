@@ -54,29 +54,3 @@ public class ClassContents {
         		return str.replaceAll(rem, "");
         }
 }
-
-//
-//dump("クラス", clazz.getDeclaredAnnotations());
-//
-//Constructor[] cs = clazz.getConstructors();
-//dump("コンストラクター", cs[0].getDeclaredAnnotations());
-//
-//Field[] fs = clazz.getDeclaredFields();
-//dump("フィールド", fs[0].getDeclaredAnnotations());
-//
-//Method[] ms = clazz.getDeclaredMethods();
-//dump("メソッド", ms[0].getDeclaredAnnotations());
-//
-//Annotation[][] ma = ms[0].getParameterAnnotations();
-//dump("引数1", ma[0]);
-//dump("引数2", ma[1]);
-//
-////ローカル変数のアノテーションはどうやって取得するんだろう？？
-//}
-//
-//public static void dump(String message, Annotation[] as) {
-//System.out.println(message);
-//for (Annotation a : as) {
-//	System.out.println(a);
-//}
-//}
