@@ -1,5 +1,6 @@
 package JPL.ch16.ex16_05;
 
+import java.awt.print.Printable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 
@@ -31,10 +32,11 @@ public class ClassContents {
                         String decl = m.toString();
                         System.out.print(" ");
                         System.out.println(strip(decl, "java.lang."));
+                        printAnnotation(m);
                 }
         }
         
-        public void printAnnotation(Member c){
+        public static void printAnnotation(Member c){
         	Annotation[] annotations;
         	if(c.getClass().isAssignableFrom(Method.class))
         		annotations = ((Method)c).getAnnotations();
@@ -45,7 +47,7 @@ public class ClassContents {
         	else
         		return;
     		for (Annotation annotation : annotations) {
-    			System.out.println("  ");
+    			System.out.printf(" annotation ");
     			System.out.println(strip(annotation.getClass().getCanonicalName(),"java.lang."));
     		}
     	}
@@ -54,3 +56,4 @@ public class ClassContents {
         		return str.replaceAll(rem, "");
         }
 }
+
