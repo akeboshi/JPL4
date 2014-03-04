@@ -23,8 +23,18 @@ public class ThreadPool {
 	private int queueSize;
 	private Thread[] threads;
 	private LinkedList<Runnable> queue;
-	private ArrayList<Thread> runnableThreadList = new ArrayList<Thread>();
+	private ArrayList<Runnable> runnableThreadList = new ArrayList<Runnable>();
 	private boolean startFlag = false;
+	private boolean lastFlag = false;
+	private Runnable lastThread = new Runnable() {
+
+		@Override
+		public void run() {
+			lastFlag = true;
+			System.out.println("LastThread");
+		}
+
+	};
 
 	/**
 	 * Constructs ThreadPool.
@@ -49,22 +59,23 @@ public class ThreadPool {
 		for (int i = 0; i < numberOfThreads; i++) {
 			threads[i] = new Thread(new Runnable() {
 				public void run() {
-					Runnable r;
-					while (true) {
-						synchronized (ThreadPool.this) {
-							while (queue.isEmpty()) {
+					Runnable r = null;
+					while (!lastFlag) {
+						synchronized (queue) {
+							while (queue.isEmpty() && !lastFlag) {
 								try {
-									ThreadPool.this.notifyAll();
-									ThreadPool.this.wait();
+									queue.wait();
+									if(lastFlag)return;
 								} catch (InterruptedException ignored) {
 								}
 							}
-							r = (Runnable) queue.removeFirst();
-							Thread t = new Thread(r);
-							t.start();
-							runnableThreadList.add(t);
-
+							if (!queue.isEmpty())
+								r = (Runnable) queue.removeFirst();
+							if (r != null)
+								queue.notifyAll();
 						}
+						if (r != null)
+							r.run();
 					}
 				}
 			});
@@ -96,27 +107,35 @@ public class ThreadPool {
 	 * @throws IllegalStateException
 	 *             if threads has not been started.
 	 */
-	public synchronized void stop() {
+	public void stop() {
 
 		if (!startFlag)
 			throw new IllegalStateException();
 		else
 			startFlag = false;
 
-		while (!queue.isEmpty()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		synchronized (queue) {
+			queue.add(lastThread);
+			while (!queue.isEmpty() && lastFlag) {
+				queue.notifyAll();
+				try {
+					queue.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-		}
-		for (Thread thread : runnableThreadList) {
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+/*
+			for (int i = 0; i < threads.length; i++) {
+				try {
+					if (threads[i].isAlive())
+						threads[i].join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			*/
 		}
 
 	}
@@ -135,20 +154,21 @@ public class ThreadPool {
 	 *             if this pool has not been started yet.
 	 */
 	public synchronized void dispatch(Runnable runnable) {
-
-		if (runnable == null)
-			throw new NullPointerException();
-		if (!startFlag)
-			throw new IllegalStateException();
-		while (queue.size() > queueSize) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		synchronized (queue) {
+			if (runnable == null)
+				throw new NullPointerException();
+			if (!startFlag)
+				throw new IllegalStateException();
+			while (queue.size() > queueSize) {
+				try {
+					queue.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			queue.add(runnable);
+			queue.notifyAll();
 		}
-		queue.add(runnable);
-		notifyAll();
 	}
 }

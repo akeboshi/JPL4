@@ -1,6 +1,7 @@
 package JPL.ch14.ex14_10;
+
 /*
- * Copyright (C) 2012, 2013 RICOH Co., Ltd. All rights reserved.
+ * Copyright (C) 2012 - 2014 RICOH Co., Ltd. All rights reserved.
  */
 import static org.junit.Assert.*;
 
@@ -15,6 +16,8 @@ import org.junit.Test;
 /**
  * This is a Test class for ThreadPool class.
  * This class is written with JUnit 4.
+ * 
+ * @author Yoshiki Shibata
  */
 public class TestThreadPool {
 
@@ -243,7 +246,10 @@ public class TestThreadPool {
 		final int numberOfThreads = 10;
 		ThreadPool tp = new ThreadPool(10,numberOfThreads);
 		tp.start();
-		for (int i = 0; i < numberOfThreads; i++)
+		
+		// Execute tasks of which number is 3 times of the number of threads so that
+		// we can make sure that a new thread is not created for each task.
+		for (int i = 0; i < numberOfThreads * 3; i++)
 			tp.dispatch(task);
 		
 		// By the specification, stop() will wait for the terminations of all threads.
