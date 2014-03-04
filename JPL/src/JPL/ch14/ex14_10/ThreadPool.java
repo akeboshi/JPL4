@@ -1,6 +1,5 @@
 package JPL.ch14.ex14_10;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /*
@@ -23,14 +22,16 @@ public class ThreadPool {
 	private int queueSize;
 	private Thread[] threads;
 	private LinkedList<Runnable> queue;
-	private ArrayList<Runnable> runnableThreadList = new ArrayList<Runnable>();
 	private boolean startFlag = false;
 	private boolean lastFlag = false;
 	private Runnable lastThread = new Runnable() {
 
 		@Override
 		public void run() {
+			synchronized (queue) {
+			queue.notifyAll();
 			lastFlag = true;
+			}
 		}
 
 	};
