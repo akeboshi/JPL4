@@ -21,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -31,6 +32,7 @@ import java.util.Map;
 
 public class Interpret extends Frame implements ActionListener, MouseListener,
 		MouseMotionListener {
+	private static final String ARRAY_NUM_BUTTON_NAME = "Set Array Num";
 	private static final String OK_BUTTON_NAME = "Set Class";
 	private static final String ARRAY_BUTTON_NAME = "Generate Array";
 	private static final String OBJ_BUTTON_NAME = "Generate Object";
@@ -46,14 +48,16 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 
 	private Class<?> bufClass = null;
 	private Integer classNum = 0;
-	private LinkedList<Class<?>> clazz = new LinkedList<>();
+	private String setInstanceName;
 	private Map<String, Object> classMap = new HashMap<String, Object>();
 
 	private TextField inputTextField = new TextField("Interpret.Interpret");
+	private TextField arrayNumField = new TextField("0");
 	private Choice methodsChoice = new Choice();
 	private Choice fieldChoice = new Choice();
 	private Choice constructorChoice = new Choice();
 	private Choice classChoice = new Choice();
+	private Button setArrayNumButton = new Button(ARRAY_NUM_BUTTON_NAME);
 	private Button generateArrayButton = new Button(ARRAY_BUTTON_NAME);
 	private Button generateObjButton = new Button(OBJ_BUTTON_NAME);
 	private Button setObjeButton = new Button(SET_OBJ_NAME);
@@ -126,6 +130,14 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		setObjeButton.setEnabled(false);
 		add(setObjeButton);
 
+		// 配列操作用
+		arrayNumField.setEnabled(false);
+		add(arrayNumField);
+		setArrayNumButton.setPreferredSize(new Dimension(200, 20));
+		setArrayNumButton.addActionListener(this);
+		setArrayNumButton.setEnabled(false);
+		add(setArrayNumButton);
+
 		// method用
 		methodsChoice.setEnabled(false);
 		add(methodsChoice);
@@ -187,49 +199,100 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 				constructorChoice.setEnabled(false);
 			}
 		} else if (e.getActionCommand() == OBJ_BUTTON_NAME) {
+
+			ConstructorDialog cond = new ConstructorDialog(this,
+					constructorChoice.getSelectedItem(),
+					constructors[constructorChoice.getSelectedIndex()],
+					classMap);
+			cond.viewProperty();
+		} else if (e.getActionCommand() == ARRAY_BUTTON_NAME) {
 			try {
-				bufClass = Class.forName(inputedText);
-				System.out.println("created" + bufClass.toString());
-				clazz.add(bufClass);
+				ArrayDialog ad = new ArrayDialog(this, inputedText,
+						Class.forName(inputedText), classMap);
+				ad.viewProperty();
 			} catch (ClassNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			ConstructorDialog cond = new ConstructorDialog(this, constructorChoice.getSelectedItem(), constructors[constructorChoice.getSelectedIndex()],classMap);
-			cond.viewProperty();
-		} else if (e.getActionCommand() == ARRAY_BUTTON_NAME) {
 
 		} else if (e.getActionCommand() == SET_OBJ_NAME) {
-			setClass = clazz.get(classChoice.getSelectedIndex());
-			setInstance = classMap.get(((Integer) classChoice.getSelectedIndex()).toString());
+			setInstanceName = classChoice.getSelectedItem();
+			setInstance = classMap.get(((Integer) classChoice
+					.getSelectedIndex()).toString());
+			setClass = setInstance.getClass();
 
-			fields = setClass.getDeclaredFields();
-			fieldChoice.removeAll();
-			if (fields.length != 0) {
-				for (Field fld : fields) {
-					fieldChoice.add(fld.getType().getName() + " "
-							+ fld.getName());
-				}
-				fieldChoice.setEnabled(true);
-				changeFieldButton.setEnabled(true);
-			} else {
+			if (setInstance.getClass().isArray()) {
+				setArrayNumButton.setEnabled(true);
+				arrayNumField.setText("0");
+				arrayNumField.setEnabled(true);
 				fieldChoice.setEnabled(false);
 				changeFieldButton.setEnabled(false);
-			}
-
-			methods = setClass.getDeclaredMethods();
-			methodsChoice.removeAll();
-			if (methods.length != 0) {
-				for (Method mtd : methods) {
-					methodsChoice.add(mtd.getName());
-				}
-				methodsChoice.setEnabled(true);
-				doMethodButton.setEnabled(true);
-			} else {
 				methodsChoice.setEnabled(false);
 				doMethodButton.setEnabled(false);
-			}
+			} else {
+				setArrayNumButton.setEnabled(false);
+				arrayNumField.setEnabled(false);
+				fields = setClass.getDeclaredFields();
+				fieldChoice.removeAll();
+				if (fields.length != 0) {
+					for (Field fld : fields) {
+						fieldChoice.add(fld.getType().getName() + " "
+								+ fld.getName());
+					}
+					fieldChoice.setEnabled(true);
+					changeFieldButton.setEnabled(true);
+				} else {
+					fieldChoice.setEnabled(false);
+					changeFieldButton.setEnabled(false);
+				}
 
+				methods = setClass.getDeclaredMethods();
+				methodsChoice.removeAll();
+				if (methods.length != 0) {
+					for (Method mtd : methods) {
+						methodsChoice.add(mtd.getName());
+					}
+					methodsChoice.setEnabled(true);
+					doMethodButton.setEnabled(true);
+				} else {
+					methodsChoice.setEnabled(false);
+					doMethodButton.setEnabled(false);
+				}
+			}
+		} else if (e.getActionCommand() == ARRAY_NUM_BUTTON_NAME) {
+			setClass = setInstance.getClass();
+			setInstance = Array.get(setInstance,
+					Integer.valueOf(arrayNumField.getText()));
+			if (setInstance != null) {
+				fields = setClass.getDeclaredFields();
+				fieldChoice.removeAll();
+				if (fields.length != 0) {
+					for (Field fld : fields) {
+						fieldChoice.add(fld.getType().getName() + " "
+								+ fld.getName());
+					}
+					fieldChoice.setEnabled(true);
+					changeFieldButton.setEnabled(true);
+				} else {
+					fieldChoice.setEnabled(false);
+					changeFieldButton.setEnabled(false);
+				}
+
+				methods = setClass.getDeclaredMethods();
+				methodsChoice.removeAll();
+				if (methods.length != 0) {
+					for (Method mtd : methods) {
+						methodsChoice.add(mtd.getName());
+					}
+					methodsChoice.setEnabled(true);
+					doMethodButton.setEnabled(true);
+				} else {
+					methodsChoice.setEnabled(false);
+					doMethodButton.setEnabled(false);
+				}
+			} else{
+				
+			}
 		} else if (e.getActionCommand() == CHANGE_FIELD_NAME) {
 			ChangeFieldDialog cfd = new ChangeFieldDialog(this,
 					fieldChoice.getSelectedItem(), setInstance,
@@ -245,14 +308,14 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		}
 	}
 
-	<T> void addInstance(T instance){
+	<T> void addInstance(T instance) {
 		classChoice.setEnabled(true);
 		setObjeButton.setEnabled(true);
 		classChoice.add(classNum + " : " + instance.getClass());
 		classMap.put(classNum.toString(), instance);
 		classNum++;
 	}
-	
+
 	public String getTestString() {
 		System.out.println("getString");
 		return testString;
