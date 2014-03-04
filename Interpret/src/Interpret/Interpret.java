@@ -26,9 +26,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.FieldPosition;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 public class Interpret extends Frame implements ActionListener, MouseListener,
 		MouseMotionListener {
@@ -67,9 +71,9 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 	private Class<?> setClass;
 	private Object setInstance;
 
-	private Field[] fields;
-	private Method[] methods;
-	private Constructor<?>[] constructors;
+	private ArrayList<Field> fields = new ArrayList<Field>();
+	private Map<String, Method> methods = new HashMap<String, Method>();
+	private ArrayList<Constructor<?>> constructors = new ArrayList<Constructor<?>>();
 
 	private Integer changeTest = 123;
 	private String testString = "str";
@@ -187,10 +191,17 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 			if (bufClass != null) {
 				generateArrayButton.setEnabled(true);
 				generateObjButton.setEnabled(true);
-				constructors = bufClass.getDeclaredConstructors();
+				constructors.clear();
+				for (Constructor<?> con : bufClass.getDeclaredConstructors()) {
+					constructors.add(con);
+				}
 				constructorChoice.removeAll();
 				for (Constructor<?> con : constructors) {
-					constructorChoice.add(con.getName());
+					String conStr = con.getName() + "(";
+					for (Class<?> paramCls : con.getParameterTypes()){
+						conStr += paramCls.getCanonicalName();
+					}	
+					constructorChoice.add(conStr + ")");
 				}
 				constructorChoice.setEnabled(true);
 			} else {
@@ -202,7 +213,7 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 
 			ConstructorDialog cond = new ConstructorDialog(this,
 					constructorChoice.getSelectedItem(),
-					constructors[constructorChoice.getSelectedIndex()],
+					constructors.get(constructorChoice.getSelectedIndex()),
 					classMap);
 			cond.viewProperty();
 		} else if (e.getActionCommand() == ARRAY_BUTTON_NAME) {
@@ -232,11 +243,14 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 			} else {
 				setArrayNumButton.setEnabled(false);
 				arrayNumField.setEnabled(false);
-				fields = setClass.getDeclaredFields();
+				fields.clear();
+				for (Field f : setClass.getDeclaredFields()) {
+					fields.add(f);
+				}
 				fieldChoice.removeAll();
-				if (fields.length != 0) {
+				if (fields.size() != 0) {
 					for (Field fld : fields) {
-						fieldChoice.add(fld.getType().getName() + " "
+						fieldChoice.add(fld.getType().getCanonicalName() + " "
 								+ fld.getName());
 					}
 					fieldChoice.setEnabled(true);
@@ -245,13 +259,28 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 					fieldChoice.setEnabled(false);
 					changeFieldButton.setEnabled(false);
 				}
-
-				methods = setClass.getDeclaredMethods();
+				methods.clear();
+				Class<?> mmmClass = setClass;
 				methodsChoice.removeAll();
-				if (methods.length != 0) {
-					for (Method mtd : methods) {
-						methodsChoice.add(mtd.getName());
+				TreeSet<String> methodSet = new TreeSet<String>();
+				while (mmmClass != Object.class) {
+					for (Method mtd : mmmClass.getDeclaredMethods()) {
+						String methodName = "";
+						methodName += mtd.getReturnType().getCanonicalName()
+								+ " ";
+						methodName += mtd.getName() + "(";
+						for (Class<?> s : mtd.getParameterTypes())
+							methodName += s.getCanonicalName() + " ";
+						methodName += ")";
+						methodSet.add(methodName);
+						methods.put(methodName, mtd);
 					}
+					mmmClass = mmmClass.getSuperclass();
+				}
+				for (String mStr : methodSet) {
+					methodsChoice.add(mStr);
+				}
+				if (methods.size() != 0) {
 					methodsChoice.setEnabled(true);
 					doMethodButton.setEnabled(true);
 				} else {
@@ -264,11 +293,14 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 			setInstance = Array.get(setInstance,
 					Integer.valueOf(arrayNumField.getText()));
 			if (setInstance != null) {
-				fields = setClass.getDeclaredFields();
+				fields.clear();
+				for (Field f : setClass.getDeclaredFields()) {
+					fields.add(f);
+				}
 				fieldChoice.removeAll();
-				if (fields.length != 0) {
+				if (fields.size() != 0) {
 					for (Field fld : fields) {
-						fieldChoice.add(fld.getType().getName() + " "
+						fieldChoice.add(fld.getType().getCanonicalName() + " "
 								+ fld.getName());
 					}
 					fieldChoice.setEnabled(true);
@@ -277,31 +309,44 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 					fieldChoice.setEnabled(false);
 					changeFieldButton.setEnabled(false);
 				}
-
-				methods = setClass.getDeclaredMethods();
+				methods.clear();
+				Class<?> mmmClass = setClass;
 				methodsChoice.removeAll();
-				if (methods.length != 0) {
-					for (Method mtd : methods) {
-						methodsChoice.add(mtd.getName());
+				TreeSet<String> methodSet = new TreeSet<String>();
+				while (mmmClass != Object.class) {
+					for (Method mtd : mmmClass.getDeclaredMethods()) {
+						String methodName = "";
+						methodName += mtd.getReturnType().getCanonicalName()
+								+ " ";
+						methodName += mtd.getName() + "(";
+						for (Class<?> s : mtd.getParameterTypes())
+							methodName += s.getCanonicalName() + " ";
+						methodName += ")";
+						methodSet.add(methodName);
+						methods.put(methodName, mtd);
 					}
+					mmmClass = mmmClass.getSuperclass();
+				}
+				for (String mStr : methodSet) {
+					methodsChoice.add(mStr);
+				}
+				if (methods.size() != 0) {
 					methodsChoice.setEnabled(true);
 					doMethodButton.setEnabled(true);
 				} else {
 					methodsChoice.setEnabled(false);
 					doMethodButton.setEnabled(false);
 				}
-			} else{
-				
 			}
 		} else if (e.getActionCommand() == CHANGE_FIELD_NAME) {
 			ChangeFieldDialog cfd = new ChangeFieldDialog(this,
 					fieldChoice.getSelectedItem(), setInstance,
-					fields[fieldChoice.getSelectedIndex()]);
+					fields.get(fieldChoice.getSelectedIndex()));
 			cfd.viewProperty();
 		} else if (e.getActionCommand() == DO_METHOD_NAME) {
 			MethodDialog md = new MethodDialog(this,
 					methodsChoice.getSelectedItem(), setInstance,
-					methods[methodsChoice.getSelectedIndex()], classMap);
+					methods.get(methodsChoice.getSelectedItem()), classMap);
 			md.viewProperty();
 		} else if (e.getActionCommand() == "閉じる") {
 			System.exit(0);
