@@ -31,7 +31,6 @@ public class ThreadPool {
 		@Override
 		public void run() {
 			lastFlag = true;
-			System.out.println("LastThread");
 		}
 
 	};
@@ -59,13 +58,12 @@ public class ThreadPool {
 		for (int i = 0; i < numberOfThreads; i++) {
 			threads[i] = new Thread(new Runnable() {
 				public void run() {
-					Runnable r = null;
 					while (!lastFlag) {
+						Runnable r = null;
 						synchronized (queue) {
 							while (queue.isEmpty() && !lastFlag) {
 								try {
 									queue.wait();
-									if(lastFlag)return;
 								} catch (InterruptedException ignored) {
 								}
 							}
@@ -116,7 +114,7 @@ public class ThreadPool {
 
 		synchronized (queue) {
 			queue.add(lastThread);
-			while (!queue.isEmpty() && lastFlag) {
+			while (!queue.isEmpty() && !lastFlag) {
 				queue.notifyAll();
 				try {
 					queue.wait();
@@ -125,19 +123,16 @@ public class ThreadPool {
 					e.printStackTrace();
 				}
 			}
-/*
-			for (int i = 0; i < threads.length; i++) {
+		}
+		for (int i = 0 ; i < threads.length ; i++){
+			if(threads[i].isAlive())
 				try {
-					if (threads[i].isAlive())
-						threads[i].join();
+					threads[i].join();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			*/
 		}
-
 	}
 
 	/**
