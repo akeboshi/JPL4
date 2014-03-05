@@ -45,7 +45,7 @@ class MethodDialog extends Dialog implements ActionListener {
 		this.clazz = clazz;
 
 		for (int i = 0; i < method.getParameterTypes().length; i++) {
-			methodParamChoice.add(methodPramTypes[i].toString());
+			methodParamChoice.add(i +" "+methodPramTypes[i].toString());
 		}
 
 		setSize(400, 200);
