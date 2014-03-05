@@ -1,18 +1,15 @@
 package Interpret;
 
+
 import java.awt.Button;
 import java.awt.Choice;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.Point;
-import java.awt.PopupMenu;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,18 +18,19 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.FieldPosition;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class Interpret extends Frame implements ActionListener, MouseListener,
 		MouseMotionListener {
@@ -43,7 +41,10 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 	private static final String SET_OBJ_NAME = "Set Object";
 	private static final String CHANGE_FIELD_NAME = "Change Field";
 	private static final String DO_METHOD_NAME = "Do Method";
-
+	
+	public static boolean INTERPRET = false;
+	public static InterpretConsole console;
+	public static PrintStream stream;
 	private static final long serialVersionUID = 1L;
 
 	private Point startDrag, startPos;
@@ -52,6 +53,7 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 
 	private Class<?> bufClass = null;
 	private Integer classNum = 0;
+	@SuppressWarnings("unused")
 	private String setInstanceName;
 	private Map<String, Object> classMap = new HashMap<String, Object>();
 
@@ -75,6 +77,7 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 	private Map<String, Method> methods = new HashMap<String, Method>();
 	private ArrayList<Constructor<?>> constructors = new ArrayList<Constructor<?>>();
 
+	@SuppressWarnings("unused")
 	private Integer changeTest = 123;
 	private String testString = "str";
 
@@ -84,6 +87,28 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 
 	public Interpret() {
 		super();
+		if(!INTERPRET){
+			JTextArea area = new JTextArea();
+			area.setEditable(false);
+				console = new InterpretConsole(area);
+				JScrollPane scroll = new JScrollPane(area);
+				scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+				scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+				JFrame frame = new JFrame("Console");
+				frame.add(scroll);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setBounds(0, 380, 500, 300);
+				frame.setVisible(true);
+				
+				stream = new PrintStream(console,true);
+				INTERPRET = true;
+			}
+			System.setOut(stream);
+			System.setErr(stream);
+
+			
+		
 		setSize(660, 500);
 		setVisible(true);
 		generateMenu();
@@ -222,7 +247,6 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 						Class.forName(inputedText), classMap);
 				ad.viewProperty();
 			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
