@@ -519,7 +519,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		backTextGreen.setText(clockParam.get("bg", "255"));
 		backTextBlue.setText(clockParam.get("bb", "255"));
 		
-		clockFontSizeString = clockParam.get("fs", "1");
+		clockFontSizeString = clockParam.get("fs", "1.0");
 		clockFontSizeDouble = 1 / Double.parseDouble(clockFontSizeString);
 		fontChoiceString = clockParam.get("fc", "Normal");
 		ClockMain = owner;
