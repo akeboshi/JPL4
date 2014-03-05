@@ -22,6 +22,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Calendar;
+import java.util.prefs.Preferences;
+
+import javax.swing.text.StyledEditorKit.FontSizeAction;
 
 
 public class ex01_04 extends Frame implements ActionListener {
@@ -496,9 +499,29 @@ class PropetyDialog extends Dialog implements ActionListener {
 	private String bufFontSizeString = clockFontSizeString;
 	private String bufFontChoiceString = "Normal";
 	Frame ClockMain;
+	
+	private Preferences clockParam = Preferences.userRoot().node("clockParam");
 
 	public PropetyDialog(Frame owner) {
 		super(owner);
+		
+		fontColor = new Color(Integer.parseInt(clockParam.get("fr", "255")),
+				Integer.parseInt(clockParam.get("fg", "0")),
+				Integer.parseInt(clockParam.get("fb", "0")));
+		textRed.setText(clockParam.get("fr", "255"));
+		textGreen.setText(clockParam.get("fg", "0"));
+		textBlue.setText(clockParam.get("fb", "0"));
+		
+		backColor = new Color(Integer.parseInt(clockParam.get("br", "255")),
+				Integer.parseInt(clockParam.get("bg", "255")),
+				Integer.parseInt(clockParam.get("bb", "255")));
+		backTextRed.setText(clockParam.get("br", "255"));
+		backTextGreen.setText(clockParam.get("bg", "255"));
+		backTextBlue.setText(clockParam.get("bb", "255"));
+		
+		clockFontSizeString = clockParam.get("fs", "1");
+		clockFontSizeDouble = 1 / Double.parseDouble(clockFontSizeString);
+		fontChoiceString = clockParam.get("fc", "Normal");
 		ClockMain = owner;
 		setSize(300, 160);
 		setResizable(false);
@@ -731,6 +754,17 @@ class PropetyDialog extends Dialog implements ActionListener {
 			clockFontSizeString = clockFontSize.getSelectedItem();
 			clockFontSizeDouble = 1 / Double.parseDouble(clockFontSizeString);
 			fontChoiceString = fontChoice.getSelectedItem();
+			
+			clockParam.put("fs", clockFontSizeString);
+			clockParam.put("fc", fontChoiceString);
+			clockParam.put("fr", textRed.getText());
+			clockParam.put("fg", textGreen.getText());
+			clockParam.put("fb", textBlue.getText());
+			clockParam.put("br", backTextRed.getText());
+			clockParam.put("bg", backTextGreen.getText());
+			clockParam.put("bb", backTextBlue.getText());
+			
+			
 			ClockMain.repaint();
 		} else if (e.getActionCommand() == "cancel") {
 			fontColor = bufFontColor;
