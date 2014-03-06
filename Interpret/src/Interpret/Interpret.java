@@ -33,13 +33,14 @@ import javax.swing.JTextArea;
 
 public class Interpret extends Frame implements ActionListener, MouseListener,
 		MouseMotionListener {
-	private static final String ARRAY_NUM_BUTTON_NAME = "Set Array Num";
+	private static final String ARRAY_NUM_BUTTON_NAME = "Generate Object in array";
 	private static final String OK_BUTTON_NAME = "Set Class";
 	private static final String ARRAY_BUTTON_NAME = "Generate Array";
 	private static final String OBJ_BUTTON_NAME = "Generate Object";
 	private static final String SET_OBJ_NAME = "Set Object";
 	private static final String CHANGE_FIELD_NAME = "Change Field";
 	private static final String DO_METHOD_NAME = "Do Method";
+	private static final String GENERATE_ARRAY_OBJ_BUTTON = "Set Array Num";
 
 	public static boolean INTERPRET = false;
 	public static InterpretConsole console;
@@ -68,6 +69,8 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 	private Button setObjeButton = new Button(SET_OBJ_NAME);
 	private Button changeFieldButton = new Button(CHANGE_FIELD_NAME);
 	private Button doMethodButton = new Button(DO_METHOD_NAME);
+	private Button generateArrayObjButton = new Button(
+			GENERATE_ARRAY_OBJ_BUTTON);
 
 	private Object setInstance;
 
@@ -162,6 +165,10 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		setArrayNumButton.addActionListener(this);
 		setArrayNumButton.setEnabled(false);
 		add(setArrayNumButton);
+		generateArrayObjButton.setPreferredSize(new Dimension(200, 20));
+		generateArrayObjButton.addActionListener(this);
+		generateArrayObjButton.setEnabled(false);
+		add(generateArrayObjButton);
 
 		// method用
 		methodsChoice.setEnabled(false);
@@ -202,7 +209,7 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 	private void okButtonAction() {
 		bufClass = null;
 		inputedText = inputTextField.getText();
-		System.out.println("Set Class is " + inputedText );
+		System.out.println("Set Class is " + inputedText);
 		try {
 			bufClass = Class.forName(inputedText);
 		} catch (ClassNotFoundException e1) {
@@ -240,6 +247,29 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		cond.viewProperty();
 	}
 
+	private void arraySetObjAction() {
+		setInstanceName = classChoice.getSelectedItem();
+		setInstance = classMap.get(((Integer) classChoice.getSelectedIndex())
+				.toString());
+		if (Array.getLength(setInstance) < Integer.valueOf(arrayNumField
+				.getText())) {
+			System.out.println("setSize is outOfBounds. arraySize is "
+					+ Array.getLength(setInstance));
+		} else {
+			setInstance = Array.get(setInstance,
+					Integer.valueOf(arrayNumField.getText()));
+			if (setInstance == null) {
+				System.out.println(setInstanceName + " ["
+						+ arrayNumField.getText() + "] is null");
+			} else {
+				System.out.println(setInstanceName + " ["
+						+ arrayNumField.getText() + "] is set");
+				generateMethodChoice(setInstance.getClass());
+				generateFieldChoice(setInstance.getClass());
+			}
+		}
+	}
+
 	private void setObjAction() {
 		setInstanceName = classChoice.getSelectedItem();
 		setInstance = classMap.get(((Integer) classChoice.getSelectedIndex())
@@ -247,6 +277,7 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 
 		if (setInstance.getClass().isArray()) {
 			setArrayNumButton.setEnabled(true);
+			generateArrayObjButton.setEnabled(true);
 			arrayNumField.setText("0");
 			arrayNumField.setEnabled(true);
 			fieldChoice.setEnabled(false);
@@ -255,6 +286,7 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 			doMethodButton.setEnabled(false);
 		} else {
 			setArrayNumButton.setEnabled(false);
+			generateArrayObjButton.setEnabled(false);
 			arrayNumField.setEnabled(false);
 			generateMethodChoice(setInstance.getClass());
 			generateFieldChoice(setInstance.getClass());
@@ -351,6 +383,8 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 					methodsChoice.getSelectedItem(), setInstance,
 					methods.get(methodsChoice.getSelectedItem()), classMap);
 			md.viewProperty();
+		} else if (e.getActionCommand() == GENERATE_ARRAY_OBJ_BUTTON) {
+			arraySetObjAction();
 		} else if (e.getActionCommand() == "閉じる") {
 			System.exit(0);
 		}
@@ -375,14 +409,15 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		classNum++;
 	}
 
-	<T> void addInstanceA(T instance,Integer arrayL) {
+	<T> void addInstanceA(T instance, Integer arrayL) {
 		classChoice.setEnabled(true);
 		setObjeButton.setEnabled(true);
-		classChoice.add(classNum + " : " + instance.getClass() + " [" + arrayL + "]");
+		classChoice.add(classNum + " : " + instance.getClass() + " [" + arrayL
+				+ "]");
 		classMap.put(classNum.toString(), instance);
 		classNum++;
 	}
-	
+
 	public String getTestString() {
 		System.out.println("getString");
 		return testString;
@@ -452,7 +487,6 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		}
 	}
 
-	
 	@Override
 	public void mouseMoved(MouseEvent e) {
 	}
