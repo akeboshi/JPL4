@@ -375,6 +375,14 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		classNum++;
 	}
 
+	<T> void addInstanceA(T instance,Integer arrayL) {
+		classChoice.setEnabled(true);
+		setObjeButton.setEnabled(true);
+		classChoice.add(classNum + " : " + instance.getClass() + " [" + arrayL + "]");
+		classMap.put(classNum.toString(), instance);
+		classNum++;
+	}
+	
 	public String getTestString() {
 		System.out.println("getString");
 		return testString;

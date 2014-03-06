@@ -34,8 +34,7 @@ class MethodDialog extends Dialog implements ActionListener {
 	private java.lang.reflect.Type methodReturnType;
 	private java.lang.reflect.Type[] methodPramTypes;
 	private java.lang.reflect.Type[] methodExcepTypes;
-	private Map<String, Object> classMap;
-	private Map<String,Object> bufMap = new HashMap<String, Object>();
+	private Map<String, Object> classMap = new HashMap<String, Object>();
 	private Button okButton = new Button("ok");
 	private Button setButton = new Button(SET_PARAM_STR);
 	private Button choiceSetButton = new Button(SET_PARAM_CHOICE);
@@ -49,7 +48,6 @@ class MethodDialog extends Dialog implements ActionListener {
 		methodPramTypes = method.getGenericParameterTypes();
 		methodExcepTypes = method.getGenericExceptionTypes();
 		params = new Object[method.getParameterAnnotations().length];
-		this.classMap = classMap;
 
 		for (int i = 0; i < method.getParameterTypes().length; i++) {
 			methodParamChoice.add(i + " : " + methodPramTypes[i].toString());
@@ -63,7 +61,7 @@ class MethodDialog extends Dialog implements ActionListener {
 		
 		int i = 0;
 		for (String insStr : classMap.keySet()) {
-			bufMap.put(i + " : " + classMap.get(insStr).getClass().getName(), classMap.get(insStr));
+			this.classMap.put(i + " : " + classMap.get(insStr).getClass().getName(), classMap.get(insStr));
 			instanceChoice.add(i + " : " + classMap.get(insStr).getClass().getName());
 			i++;
 		}
@@ -87,6 +85,8 @@ class MethodDialog extends Dialog implements ActionListener {
 			inputTextField.setEnabled(false);
 			methodParamChoice.setEnabled(false);
 			setButton.setEnabled(false);
+			choiceSetButton.setEnabled(false);
+			instanceChoice.setEnabled(false);
 		} else {
 			okButton.setEnabled(false);
 		}
@@ -161,7 +161,7 @@ class MethodDialog extends Dialog implements ActionListener {
 			okButton.setEnabled(okVisibleFlag);
 		} else if (e.getActionCommand() == SET_PARAM_CHOICE) {
 			System.out.println(instanceChoice.getSelectedItem());
-			params[methodParamChoice.getSelectedIndex()] = bufMap.get(instanceChoice.getSelectedItem());
+			params[methodParamChoice.getSelectedIndex()] = classMap.get(instanceChoice.getSelectedItem());
 
 			System.out.printf("(");
 			for (Object obj : params) {

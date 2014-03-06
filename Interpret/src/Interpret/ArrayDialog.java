@@ -69,7 +69,7 @@ class ArrayDialog extends Dialog implements ActionListener {
 	}
 
 	public void createArray() {
-		owner.addInstance(Array.newInstance(type, arrayLength));
+		owner.addInstanceA(Array.newInstance(type, arrayLength), arrayLength);
 	}
 
 	public void viewProperty() {
