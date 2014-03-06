@@ -22,6 +22,7 @@ class ConstructorDialog extends Dialog implements ActionListener {
 	private static final String SET_PARAM = "Set Param";
 	private TextField inputTextField = new TextField();
 	private Object[] params;
+	private boolean array;
 	private Constructor<?> constructor;
 	private Choice constrParamChoice = new Choice();
 	private java.lang.reflect.Type[] constrPramTypes;
@@ -31,9 +32,16 @@ class ConstructorDialog extends Dialog implements ActionListener {
 	private Button setButton = new Button(SET_PARAM);
 	private Interpret owner;
 
+
 	public ConstructorDialog(Interpret owner, String dialogName,
-			Constructor<?> constructor, Map clazz) {
+			Constructor<?> constructor, Map clazz){
+		this(owner, dialogName, constructor, clazz, false);
+	}
+	
+	public ConstructorDialog(Interpret owner, String dialogName,
+			Constructor<?> constructor, Map clazz, boolean array) {
 		super(owner);
+		this.array = array;
 		this.owner = owner;
 		this.constructor = constructor;
 		constrPramTypes = constructor.getGenericParameterTypes();
@@ -42,7 +50,7 @@ class ConstructorDialog extends Dialog implements ActionListener {
 		this.clazz = clazz;
 
 		for (int i = 0; i < constructor.getParameterTypes().length; i++) {
-			constrParamChoice.add(constrPramTypes[i].toString());
+			constrParamChoice.add(i + " : " + constrPramTypes[i].toString());
 		}
 
 		setSize(400, 200);
@@ -82,14 +90,15 @@ class ConstructorDialog extends Dialog implements ActionListener {
 
 	public void createInstance() {
 		try {
+			if(!array)
 			owner.addInstance(constructor.newInstance(params));
+			else
+			owner.addArrayInstance(constructor.newInstance(params));
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		System.out.println("return void");
 	}
 
 	public void viewProperty() {
@@ -101,11 +110,20 @@ class ConstructorDialog extends Dialog implements ActionListener {
 		if (e.getActionCommand() == "ok") {
 			createInstance();
 			setVisible(false);
+			System.out.println("instance is created");
 		} else if (e.getActionCommand() == SET_PARAM) {
 			params[constrParamChoice.getSelectedIndex()] = ChangeFieldDialog
 					.createObjFromString(inputTextField.getText(),
 							(Class<?>) constrPramTypes[constrParamChoice
 									.getSelectedIndex()]);
+			
+			System.out.printf("(");
+			for (Object obj : params){
+				if(obj == null) System.out.printf("null,");
+				else System.out.printf(obj.toString() + ",");
+			}
+			System.out.println(")");
+			
 			Boolean okVisibleFlag = true;
 			for (int i = 0; i < constrPramTypes.length; i++) {
 				if (params[i] == null)

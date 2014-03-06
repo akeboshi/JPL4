@@ -21,7 +21,7 @@ public class InterpretConsole extends OutputStream {
     public void write(int b) throws IOException {
         _buf.write(b);
     }
-    
+
     @Override
     public void flush() throws IOException {
 
