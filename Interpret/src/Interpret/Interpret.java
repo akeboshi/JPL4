@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.PrintStream;
@@ -32,7 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class Interpret extends Frame implements ActionListener, MouseListener,
-		MouseMotionListener {
+		MouseMotionListener, TextListener {
 	private static final String ARRAY_NUM_BUTTON_NAME = "Generate Object in array";
 	private static final String OK_BUTTON_NAME = "Set Class";
 	private static final String ARRAY_BUTTON_NAME = "Generate Array";
@@ -125,9 +127,10 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		setLayout(new GridLayout(20, 1));
 
 		// オブジェクト文字列入力フィールド
+		inputTextField.addTextListener(this);
 		add(inputTextField);
 
-		// OKボタン
+		// Set Classボタン
 		Button okButton = new Button(OK_BUTTON_NAME);
 		okButton.setPreferredSize(new Dimension(200, 20));
 		okButton.addActionListener(this);
@@ -489,5 +492,14 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+	}
+
+	@Override
+	public void textValueChanged(TextEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+		if(inputTextField.getText().charAt(inputTextField.getText().length()) == '\n'){
+			okButtonAction();
+		}
+		System.out.println(inputTextField.getText());
 	}
 }
