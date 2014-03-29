@@ -8,7 +8,6 @@ class BetweenCharacters {
 
 	public static void displayBetweenCharacters(char firstChar, char lastChar) {
 		String displayString = "";
-		char buf;
 		if (firstChar > lastChar) {
 			for( ; firstChar >= lastChar ; firstChar--){
 				displayString += firstChar;

@@ -18,7 +18,6 @@ class BetweenCharacters {
 
 	public static void displayBetweenCharactersVerWhile(char firstChar, char lastChar) {
 		String displayString = "";
-		char buf;
 		if (firstChar > lastChar) {
 			while( firstChar >= lastChar ){
 				displayString += firstChar--;
@@ -32,7 +31,6 @@ class BetweenCharacters {
 	}
 	public static void displayBetweenCharactersVerDoWhile(char firstChar, char lastChar) {
 		String displayString = "";
-		char buf;
 		if (firstChar > lastChar) {
 			do{
 				displayString += firstChar--;

@@ -8,8 +8,8 @@ class CountBit{
 				System.out.println("error " + i);
 			}
 		}
-		System.out.println(countBit.bitCountMethod(8));
-		System.out.println(countBit.integerBitCount(8));
+		System.out.println(countBit.bitCountMethod(50));
+		System.out.println(countBit.integerBitCount(50));
 	}
 
 	public int bitCountMethod(int countableData){

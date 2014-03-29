@@ -331,7 +331,7 @@ public class Interpret extends Frame implements ActionListener, MouseListener,
 		methodsChoice.removeAll();
 		TreeSet<String> methodSet = new TreeSet<String>();
 		while (mmmClass != Object.class) {
-			for (Method mtd : mmmClass.getDeclaredMethods()) {
+			for (Method mtd : mmmClass.getMethods()) {
 				String methodName = "";
 				methodName += mtd.getReturnType().getCanonicalName() + " ";
 				methodName += mtd.getName() + "(";

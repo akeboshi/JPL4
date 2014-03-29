@@ -30,7 +30,9 @@ import javax.swing.text.StyledEditorKit.FontSizeAction;
 public class ex01_04 extends Frame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private PropetyDialog propertyDialog;
+	private Preferences clockParam = Preferences.userRoot().node("clockParam");
 	private double resize = 1.0;
+	private Frame owner;
 
 	public static void main(String args[]) {
 
@@ -44,10 +46,14 @@ public class ex01_04 extends Frame implements ActionListener {
 
 	public ex01_04(String title) {
 		super(title);
+		owner = this;
+		this.setLocation(clockParam.getInt("cpx", 0), clockParam.getInt("cpx",0));
 		propertyDialog = new PropetyDialog(this);
 		generateMenu();
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent close) {
+				clockParam.putInt("cpx", owner.getLocation().x);
+				clockParam.putInt("cpy", owner.getLocation().y);
 				System.exit(0);
 			}
 		});
@@ -535,7 +541,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 0;
 		gbc.gridwidth = 6;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.WEST;
+		gbc.anchor = GridBagConstraints.EAST;
 		layout.setConstraints(fontLabel, gbc);
 		add(fontLabel);
 
@@ -544,7 +550,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 1;
 		gbc.gridwidth = 6;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.WEST;
+		gbc.anchor = GridBagConstraints.EAST;
 		layout.setConstraints(fontSizeLabel, gbc);
 		add(fontSizeLabel);
 		
@@ -553,7 +559,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 2;
 		gbc.gridwidth = 6;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.WEST;
+		gbc.anchor = GridBagConstraints.EAST;
 		layout.setConstraints(fontColorLabel, gbc);
 		add(fontColorLabel);
 		
@@ -562,7 +568,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 3;
 		gbc.gridwidth = 6;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.WEST;
+		gbc.anchor = GridBagConstraints.EAST;
 		layout.setConstraints(backColorLabel, gbc);
 		add(backColorLabel);
 		
@@ -572,7 +578,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 0;
 		gbc.gridwidth = 6;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(fontChoice, gbc);
 		add(fontChoice);
 		
@@ -587,7 +593,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 1;
 		gbc.gridwidth = 6;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(clockFontSize, gbc);
 		add(clockFontSize);
 		
@@ -596,7 +602,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(redLabel, gbc);
 		add(redLabel);
 		
@@ -604,7 +610,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(textRed, gbc);
 		add(textRed);
 		
@@ -613,7 +619,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(greenLabel, gbc);
 		add(greenLabel);
 		
@@ -621,7 +627,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(textGreen, gbc);
 		add(textGreen);
 		
@@ -630,7 +636,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(blueLabel, gbc);
 		add(blueLabel);
 		
@@ -638,7 +644,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 2;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(textBlue, gbc);
 		add(textBlue);
 		
@@ -647,7 +653,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 3;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(redLabel2, gbc);
 		add(redLabel2);
 		
@@ -655,7 +661,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 3;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(backTextRed, gbc);
 		add(backTextRed);
 		
@@ -664,7 +670,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 3;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(greenLabel2, gbc);
 		add(greenLabel2);
 		
@@ -672,7 +678,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 3;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(backTextGreen, gbc);
 		add(backTextGreen);
 		
@@ -681,7 +687,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 3;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(blueLabel2, gbc);
 		add(blueLabel2);
 		
@@ -689,7 +695,7 @@ class PropetyDialog extends Dialog implements ActionListener {
 		gbc.gridy = 3;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(backTextBlue, gbc);
 		add(backTextBlue);
 		
