@@ -46,7 +46,6 @@ class SuggesterConstrucotrPanel extends SuggestPanel{
 	}
 
 
-
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getComponent() == searchTextField){
