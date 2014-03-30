@@ -3,6 +3,7 @@ package Interpret;
 import java.awt.Button;
 import java.awt.Checkbox;
 import java.awt.Choice;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -14,6 +15,8 @@ import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.Panel;
+import java.awt.ScrollPane;
+import java.awt.TextArea;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,10 +28,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.PrintStream;
 import java.lang.reflect.Array;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 public class Interpret extends Frame implements ActionListener, KeyListener,
 		ItemListener {
@@ -46,17 +45,21 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 	private TextField arrayNumberTextField = new TextField();
 	private Label arrayNumberLabel = new Label("配列の個数を入力");
 	private Button instanceCreatingButton = new Button("インスタンスを作成する");
+	private Label searchListLabel = new Label("実行するインスタンスをリストから選択");
+	private Label searchInstanceLabel = new Label("検索: ");
 	private TextField searchInstanceTextField = new TextField();
 	private List instanceList = new List();
 	private Choice inputArrayNumberChoice = new Choice();
-	private Button updateFieldButton = new Button("フィールド一覧を更新");
-	private List fieldList = new List();
-
-	private Panel constructerPanel = new SuggesterPanel("コンストラクタ");
-	private Panel methodPanel = new SuggesterPanel("メソッド");
-	private Panel fieldPanel = new SuggesterPanel("フィールド");
+	private Label inputArrayNumberLabel = new Label("配列の番号を入力");
 
 	private CreatedMembers createdMembers = new CreatedMembers();
+
+	private SuggestPanel constructerPanel = new SuggesterConstrucotrPanel("コンストラクタ",
+			createdMembers, this);
+	private SuggestPanel methodPanel = new SuggestFieldPanel("メソッド",
+			createdMembers, this);
+	private SuggestPanel fieldPanel = new SuggestMethodPanel("フィールド",
+			createdMembers, this);
 
 	@SuppressWarnings("unused")
 	private Integer changeTest = 123;
@@ -69,17 +72,22 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 
 	public Interpret() {
 		super();
-		if (!INTERPRET) {
-			JTextArea area = new JTextArea();
-			area.setEditable(false);
-			console = new InterpretConsole(area);
-			JScrollPane scroll = new JScrollPane(area);
-			scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-			scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-			JFrame frame = new JFrame("Console");
+		if (!INTERPRET) {
+			TextArea area = new TextArea();
+			area.setEditable(false);
+			area.setBackground(Color.white);
+			console = new InterpretConsole(area);
+			ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
+			scroll.add(area);
+
+			Frame frame = new Frame("Console");
+			frame.addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent we) {
+					System.exit(0);
+				}
+			});
 			frame.add(scroll);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setBounds(0, 380, 500, 300);
 			frame.setVisible(true);
 
@@ -90,9 +98,9 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		System.setErr(stream);
 
 		setSize(1000, 500);
-		setVisible(true);
 		createMenu();
 		createComponent();
+
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent close) {
 				System.exit(0);
@@ -153,23 +161,27 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 				2, 1);
 
 		// インスタンス表のラベル
-		addComponent(mainPanel, mainGBL, new Label("実行するインスタンスをリストから選択"), 0,
-				panel_y++, 2, 1);
+		searchListLabel.setEnabled(false);
+		addComponent(mainPanel, mainGBL, searchListLabel, 0, panel_y++, 2, 1);
 
 		// 検索ラベル
-		addComponent(mainPanel, mainGBL, new Label("検索:"), 0, panel_y, 1, 1);
+		searchInstanceLabel.setEnabled(false);
+		addComponent(mainPanel, mainGBL, searchInstanceLabel, 0, panel_y, 1, 1);
 
 		// インスタンス検索用
 		searchInstanceTextField.addKeyListener(this);
+		searchInstanceTextField.setEnabled(false);
 		addComponent(mainPanel, mainGBL, searchInstanceTextField, 1, panel_y++,
 				1, 1);
 
 		// インスタンスの表
 		instanceList.addItemListener(this);
+		instanceList.setEnabled(false);
 		addComponent(mainPanel, mainGBL, instanceList, 0, panel_y++, 2, 1);
 
 		// 配列の番号を入力を促すラベル
-		addComponent(mainPanel, mainGBL, new Label("配列の番号を入力"), 0, panel_y, 1,
+		inputArrayNumberLabel.setEnabled(false);
+		addComponent(mainPanel, mainGBL, inputArrayNumberLabel, 0, panel_y, 1,
 				1);
 
 		// 配列の番号を選ぶChoice
@@ -178,11 +190,8 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		inputArrayNumberChoice.add("1");
 		addComponent(mainPanel, mainGBL, inputArrayNumberChoice, 1, panel_y++,
 				1, 1);
-	}
 
-	private void addItemListener(Interpret interpret2) {
-		// TODO 自動生成されたメソッド・スタブ
-
+		setVisible(true);
 	}
 
 	private void createMenu() {
@@ -202,18 +211,22 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 	}
 
 	private void createInstance(String classString) {
-		String instanceName;
+		String instanceName = null;
 		if (arrayCheckbox.getState()) {
 			if (!arrayNumberTextField.getText().equals("")) {
 				try {
-					instanceName = new String(createdMembers.sizeClassMap() + ": "
-							+ classString + " ["
+					instanceName = new String(createdMembers.sizeClassMap()
+							+ ": " + classString + " ["
 							+ arrayNumberTextField.getText() + "]");
 					createdMembers.addClassMap(instanceName, Array.newInstance(
 							Class.forName(classString),
 							Integer.valueOf(arrayNumberTextField.getText())));
-
 					instanceList.add(instanceName);
+
+					searchListLabel.setEnabled(true);
+					searchInstanceLabel.setEnabled(true);
+					searchInstanceTextField.setEnabled(true);
+					instanceList.setEnabled(true);
 				} catch (NumberFormatException | NegativeArraySizeException
 						| ClassNotFoundException e) {
 					// TODO 自動生成された catch ブロック
@@ -222,14 +235,17 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 			} else {
 				// TODO
 				System.out.println("【Error】配列の数が指定されてません");
+				return;
 			}
 		} else {
 			try {
+				// TODO コンストラクタを実行してくださいというDialog
 				instanceName = new String(createdMembers.sizeClassMap() + ": "
 						+ classString);
-				createdMembers.addClassMap(instanceName,
-						Class.forName(classString));
-				instanceList.add(instanceName);
+				constructerPanel.updateList(Class.forName(classString));
+				constructerPanel.setEnabled(true);
+				// createdMembers.addClassMap(instanceName,
+				// Class.forName(classString));
 			} catch (ClassNotFoundException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -265,7 +281,10 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 				if (item.indexOf(searchInstanceTextField.getText()) != -1)
 					instanceList.add(item);
 			}
-		} else if (e.getComponent() == classNameTextField){
+		} else if (e.getComponent() == classNameTextField) {
+			if (e.getKeyChar() == '\n')
+				createInstance(classNameTextField.getText());
+		} else if (e.getComponent() == arrayNumberTextField) {
 			if (e.getKeyChar() == '\n')
 				createInstance(classNameTextField.getText());
 		}
@@ -277,6 +296,20 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 			arrayNumberTextField.setEnabled(arrayCheckbox.getState());
 			arrayNumberLabel.setEnabled(arrayCheckbox.getState());
 		} else if (e.getItemSelectable() == instanceList) {
+			Object clsmem = createdMembers.getClassMap().get(
+					instanceList.getSelectedItem());
+			if (clsmem.getClass().isArray()) {
+				inputArrayNumberChoice.removeAll();
+				for (Integer i = 0; i < Array.getLength(clsmem); i++) {
+					inputArrayNumberChoice.add(i.toString());
+				}
+
+				inputArrayNumberChoice.setEnabled(true);
+				inputArrayNumberLabel.setEnabled(true);
+			} else {
+				inputArrayNumberChoice.setEnabled(false);
+				inputArrayNumberLabel.setEnabled(false);
+			}
 		}
 
 	}
