@@ -10,7 +10,9 @@ import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 abstract class SuggestPanel extends Panel implements KeyListener, ItemListener,
@@ -39,7 +41,6 @@ abstract class SuggestPanel extends Panel implements KeyListener, ItemListener,
 		this.interpret = interpret;
 		panelNameLabel.setText(panelName);
 		jikkoButton.setLabel(panelName);
-		setMembersDialog();
 		createComponent();
 	}
 
@@ -92,11 +93,36 @@ abstract class SuggestPanel extends Panel implements KeyListener, ItemListener,
 		jikkoButton.setEnabled(b);
 	}
 
+	abstract void setSelectedItem();
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jikkoButton) {
+			setSelectedItem();
+			setMembersDialog();
 			membersDialog.setVisible(true);
 		}
+
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		if(e.getItemSelectable() == componentList){
+			setSelectedItem();
+			setMembersDialog();
+			membersDialog.setVisible(true);
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// 何もしない
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// 何もしない
 
 	}
 

@@ -11,46 +11,51 @@ import java.awt.List;
 import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 abstract class MembersDialog extends Dialog implements KeyListener,
-		ActionListener {
+		ActionListener, ItemListener {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static int LIST_ROW = 5;
+	private static int LIST_ROW = 8;
 
 	protected CreatedMembers createdMembers;
 	private String dialogName;
 	protected Integer paramSize;
-	protected String[] paramTypes;
+	protected ArrayList<Class<?>> paramTypes = new ArrayList<Class<?>>();
 
 	protected ArrayList<Label> panelNameLabel = new ArrayList<Label>();
 	protected static final String searchLabelText = "検索: ";
 	protected ArrayList<Label> searchLabel = new ArrayList<Label>();
 	protected ArrayList<TextField> searchTextField = new ArrayList<TextField>();
-	protected static final String paramFromStringLabelText = "文字列から入力を行う";
+	protected static final String paramFromStringLabelText = "文字列から取得";
 	protected ArrayList<Label> paramFromStringLabel = new ArrayList<Label>();
 	protected ArrayList<TextField> paramFromStringTextField = new ArrayList<TextField>();
 	protected ArrayList<List> componentList = new ArrayList<List>();
-	protected ArrayList<Button> jikkoButton = new ArrayList<Button>();
+	protected Button jikkoButton = new Button("実行する");
+	protected ArrayList<Label> setParamLabel = new ArrayList<Label>();
+	protected ArrayList<Button> setFromTextButton = new ArrayList<Button>();
+	protected ArrayList<Button> setFromObjectButton = new ArrayList<Button>();
 
 	public MembersDialog(Interpret owner, CreatedMembers createdMembers,
 			String dialogName) {
 		super(owner);
 		this.dialogName = dialogName;
 		this.createdMembers = createdMembers;
-		setSize(400, 200);
+
+		setParams();
+		createPanel();
+
+		setSize(150 * (paramSize + 1), 300);
 		setResizable(false);
 		setTitle(dialogName);
-
-		setParamSize();
-		createPanel();
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent close) {
@@ -59,19 +64,14 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 		});
 	}
 
-	private void setParamSize() {
-		paramSize = 2;
-		String[] buf = { "int", "int" };
-		paramTypes = buf;
-		for (int i =0 ; i < paramSize ;i++){
-			panelNameLabel.add(new Label("int" + "を設定"));
-		}
-	}
+	/**
+	 * paramSizeとpramTypesの設定
+	 */
+	abstract void setParams();
 
 	private void createPanel() {
-		//Panel[] dialogPanel = new Panel[paramSize];
-		setLayout(new GridLayout(1, 3));
-		for (Integer i = 0 ; i< paramSize ; i++){
+		setLayout(new GridLayout(1, paramSize + 1));
+		for (Integer i = 0; i < paramSize; i++) {
 			Panel dialogPanel = new Panel();
 			GridBagLayout gbl = new GridBagLayout();
 			dialogPanel.setLayout(gbl);
@@ -79,25 +79,69 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 			int panel_y = 0;
 
 			// Panelの種類ラベル
-			addComponent(dialogPanel, gbl, panelNameLabel.get(i), 0, panel_y++, 2,
-					1);
+			panelNameLabel.add(new Label(paramTypes.get(i).toString() + "を設定"));
+			addComponent(dialogPanel, gbl, panelNameLabel.get(i), 0, panel_y++,
+					2, 1);
+
+			// 文字列から引数を取得するラベルとテキストフィールド
+			paramFromStringLabel.add(new Label(paramFromStringLabelText));
+			addComponent(dialogPanel, gbl, paramFromStringLabel.get(i), 0,
+					panel_y++, 2, 1);
+			paramFromStringTextField.add(new TextField());
+			paramFromStringTextField.get(i).addKeyListener(this);
+			addComponent(dialogPanel, gbl, paramFromStringTextField.get(i), 0,
+					panel_y++, 2, 1);
 
 			// 検索ラベル
 			searchLabel.add(new Label(searchLabelText));
+			addComponent(dialogPanel, gbl, new Label("インスタンスから取得"), 0,
+					panel_y++, 2, 1);
 			addComponent(dialogPanel, gbl, searchLabel.get(i), 0, panel_y, 1, 1);
 
 			// 検索テキストフィールド
 			searchTextField.add(new TextField());
 			searchTextField.get(i).addKeyListener(this);
-			addComponent(dialogPanel, gbl, searchTextField.get(i), 1, panel_y++, 1,
-					1);
+			addComponent(dialogPanel, gbl, searchTextField.get(i), 1,
+					panel_y++, 1, 1);
 
 			// 検索結果リスト
 			componentList.add(new List());
-			addComponent(dialogPanel, gbl, componentList.get(i), 0, panel_y++, 2, 1);
-			
+			componentList.get(i).addItemListener(this);
+			addComponent(dialogPanel, gbl, componentList.get(i), 0, panel_y++,
+					2, 1);
+
+			// テキストから引数をゲットするためのボタン
+			setFromTextButton.add(new Button("文字列から取得"));
+			setFromTextButton.get(i).addActionListener(this);
+			addComponent(dialogPanel, gbl, setFromTextButton.get(i), 0,
+					panel_y++, 2, 1);
+
+			// オブジェクトから引数をゲットするためのボタン
+			setFromObjectButton.add(new Button("インスタンスから取得"));
+			setFromObjectButton.get(i).addActionListener(this);
+			addComponent(dialogPanel, gbl, setFromObjectButton.get(i), 0,
+					panel_y++, 2, 1);
 			add(dialogPanel);
 		}
+
+		// 実行用パネル
+		// 設定されている引数を表示と、実行ボタンがある。
+		Panel actionPanel = new Panel();
+		GridBagLayout gbl = new GridBagLayout();
+		actionPanel.setLayout(gbl);
+
+		int panel_y = 0;
+
+		for (Integer i = 0; i < paramSize; i++) {
+			setParamLabel.add(new Label("null"));
+			addComponent(actionPanel, gbl, setParamLabel.get(i), 0, panel_y++,
+					1, 1);
+		}
+
+		jikkoButton.addActionListener(this);
+		addComponent(actionPanel, gbl, jikkoButton, 0, panel_y++, 1, 1);
+
+		add(actionPanel);
 	}
 
 	protected void addComponent(Panel panel, GridBagLayout gbl,
@@ -116,7 +160,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 
 	/**
 	 * String inputからClass typeに対応する基本データ型を返す
-	 * 
+	 *
 	 * @param input
 	 * @param type
 	 * @return 基本データ型、typeが基本データ型以外の物はnull

@@ -56,9 +56,9 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 
 	private SuggestPanel constructerPanel = new SuggesterConstrucotrPanel("コンストラクタ",
 			createdMembers, this);
-	private SuggestPanel methodPanel = new SuggestFieldPanel("メソッド",
+	private SuggestPanel methodPanel = new SuggestMethodPanel("メソッド",
 			createdMembers, this);
-	private SuggestPanel fieldPanel = new SuggestMethodPanel("フィールド",
+	private SuggestPanel fieldPanel = new SuggestFieldPanel("フィールド",
 			createdMembers, this);
 
 	@SuppressWarnings("unused")

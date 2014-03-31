@@ -1,24 +1,12 @@
 package Interpret;
 
-import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
+
 
 class SuggestFieldPanel extends SuggestPanel{
 
 	SuggestFieldPanel(String panelName, CreatedMembers createdMembers, Interpret interpret) {
 		super(panelName + "を変更する", createdMembers, interpret);
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
-
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
-
 	}
 
 	@Override
@@ -28,7 +16,7 @@ class SuggestFieldPanel extends SuggestPanel{
 	}
 
 	@Override
-	public void itemStateChanged(ItemEvent e) {
+	void setMembersDialog() {
 		// TODO 自動生成されたメソッド・スタブ
 
 	}
@@ -40,8 +28,9 @@ class SuggestFieldPanel extends SuggestPanel{
 	}
 
 	@Override
-	void setMembersDialog() {
+	void setSelectedItem() {
 		// TODO 自動生成されたメソッド・スタブ
 
 	}
+
 }

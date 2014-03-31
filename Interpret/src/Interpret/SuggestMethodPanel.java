@@ -1,6 +1,5 @@
 package Interpret;
 
-import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 
 class SuggestMethodPanel extends SuggestPanel {
@@ -9,14 +8,16 @@ class SuggestMethodPanel extends SuggestPanel {
 		super(panelName + "を実行する", createdMembers, interpret);
 	}
 
+
+
 	@Override
-	public void keyTyped(KeyEvent e) {
+	void updateList(Class<?> cls) {
 		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	void setMembersDialog() {
 		// TODO 自動生成されたメソッド・スタブ
 
 	}
@@ -28,19 +29,7 @@ class SuggestMethodPanel extends SuggestPanel {
 	}
 
 	@Override
-	public void itemStateChanged(ItemEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
-
-	}
-
-	@Override
-	void updateList(Class<?> cls) {
-		// TODO 自動生成されたメソッド・スタブ
-
-	}
-
-	@Override
-	void setMembersDialog() {
+	void setSelectedItem() {
 		// TODO 自動生成されたメソッド・スタブ
 
 	}
