@@ -2,8 +2,9 @@ package Interpret;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-class ConstructorDialog extends MembersDialog implements ActionListener {
+class ConstructorDialog extends MembersDialog {
 	private static final long serialVersionUID = 1L;
 
 	public ConstructorDialog(Interpret owner, String dialogName,
@@ -37,5 +38,23 @@ class ConstructorDialog extends MembersDialog implements ActionListener {
 	void doReflectMember() {
 		// TODO 自動生成されたメソッド・スタブ
 
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
