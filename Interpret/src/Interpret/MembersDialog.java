@@ -10,8 +10,11 @@ import java.awt.Label;
 import java.awt.List;
 import java.awt.Panel;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -26,10 +29,12 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 
 	private static int LIST_ROW = 8;
 
+	protected Interpret owner;
 	protected CreatedMembers createdMembers;
 	private String dialogName;
 	protected Integer paramSize;
 	protected ArrayList<Class<?>> paramTypes = new ArrayList<Class<?>>();
+	protected Object[] paramObjs;
 
 	protected ArrayList<Label> panelNameLabel = new ArrayList<Label>();
 	protected static final String searchLabelText = "検索: ";
@@ -47,12 +52,14 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 	public MembersDialog(Interpret owner, CreatedMembers createdMembers,
 			String dialogName) {
 		super(owner);
+		this.owner = owner;
 		this.dialogName = dialogName;
 		this.createdMembers = createdMembers;
 
 		setParams();
 		createPanel();
 
+		paramObjs = new Object[paramSize];
 		setSize(150 * (paramSize + 1), 300);
 		setResizable(false);
 		setTitle(dialogName);
@@ -67,7 +74,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 	/**
 	 * paramSizeとpramTypesの設定
 	 */
-	abstract void setParams();
+	abstract protected void setParams();
 
 	private void createPanel() {
 		setLayout(new GridLayout(1, paramSize + 1));
@@ -109,6 +116,9 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 			componentList.get(i).addItemListener(this);
 			addComponent(dialogPanel, gbl, componentList.get(i), 0, panel_y++,
 					2, 1);
+			for(String objKey : createdMembers.getClassMap().keySet()){
+				componentList.get(i).add(objKey);
+			}
 
 			// テキストから引数をゲットするためのボタン
 			setFromTextButton.add(new Button("文字列から取得"));
@@ -158,6 +168,30 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 
 	abstract void doReflectMember();
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		for (Integer i = 0; i < paramSize; i++) {
+			Object setObj;
+			if (e.getSource() == setFromTextButton.get(i)) {
+				// 文字列から取得ボタンを押された時に、文字列から取得の文字列を取得して、
+				// そのフィールドのクラスに変換する
+				// ただし、プリミティブ型ではないときはnullが返される
+				setObj = createObjFromString(paramFromStringTextField
+						.get(i).getText(), paramTypes.get(i));
+				paramObjs[i] = setObj;
+				setParamLabel.get(i).setText(setObj.toString());
+			} else if (e.getSource() == setFromObjectButton.get(i)) {
+				setObj = componentList.get(i).getSelectedItem();
+				paramObjs[i] = createdMembers.getClassMap().get(setObj);
+				setParamLabel.get(i).setText(setObj.toString());
+			}
+		}
+		if(e.getSource() == jikkoButton){
+			doReflectMember();
+			setVisible(false);
+		}
+	}
+
 	/**
 	 * String inputからClass typeに対応する基本データ型を返す
 	 *
@@ -183,10 +217,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 				|| type.equals(Character[].class) || type.equals(char[].class)
 				|| type.equals(Character[][].class)
 				|| type.equals(char[][].class)) {
-			/*
-			 * TODO char型未定義
-			 */
-
+			return input.toCharArray();
 		} else if (type.equals(Short.class) || type.equals(short.class)
 				|| type.equals(Short[].class) || type.equals(short[].class)
 				|| type.equals(Short[][].class) || type.equals(short[][].class)) {
@@ -221,6 +252,29 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 			 */
 			return null;
 		}
-		return null;
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 }

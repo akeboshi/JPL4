@@ -23,12 +23,12 @@ class SuggesterConstrucotrPanel extends SuggestPanel {
 		createdMembers.setConstructors(members);
 	}
 
+
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getComponent() == searchTextField) {
 			componentList.removeAll();
 			for (String item : createdMembers.getConstructors().keySet()) {
-				System.out.println(item + " " + searchTextField.getText());
 				if (item.indexOf(searchTextField.getText()) != -1)
 					componentList.add(item);
 			}

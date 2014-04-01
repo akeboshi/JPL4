@@ -5,7 +5,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
-
+/**
+ * 共通の必要なデータをまとめたクラス
+ * 主に、フィールド、コンストラクタ、メソッド、インスタンスのマップ
+ * @author 灯
+ *
+ */
 class CreatedMembers {
 	private Map<String, Field> fields = new TreeMap<String, Field>();
 	private Map<String, Method> methods = new TreeMap<String, Method>();

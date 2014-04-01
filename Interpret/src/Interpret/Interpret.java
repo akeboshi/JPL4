@@ -210,8 +210,24 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		closem.addActionListener(this);
 	}
 
+	/**
+	 * インスタンスのリストをアップデート
+	 */
+	void refreshInstanceList(){
+		instanceList.removeAll();
+		for (String item : createdMembers.getClassMap().keySet()) {
+			if (item.indexOf(searchInstanceTextField.getText()) != -1)
+				instanceList.add(item);
+		}
+		searchListLabel.setEnabled(true);
+		searchInstanceLabel.setEnabled(true);
+		searchInstanceTextField.setEnabled(true);
+		instanceList.setEnabled(true);
+	}
+
 	private void createInstance(String classString) {
 		String instanceName = null;
+		// 配列の時
 		if (arrayCheckbox.getState()) {
 			if (!arrayNumberTextField.getText().equals("")) {
 				try {
@@ -238,14 +254,11 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 				return;
 			}
 		} else {
+			// 配列ではない時
 			try {
 				// TODO コンストラクタを実行してくださいというDialog
-				instanceName = new String(createdMembers.sizeClassMap() + ": "
-						+ classString);
 				constructerPanel.updateList(Class.forName(classString));
 				constructerPanel.setEnabled(true);
-				// createdMembers.addClassMap(instanceName,
-				// Class.forName(classString));
 			} catch (ClassNotFoundException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -296,17 +309,22 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 			arrayNumberTextField.setEnabled(arrayCheckbox.getState());
 			arrayNumberLabel.setEnabled(arrayCheckbox.getState());
 		} else if (e.getItemSelectable() == instanceList) {
-			Object clsmem = createdMembers.getClassMap().get(
+			Object selectedObj = createdMembers.getClassMap().get(
 					instanceList.getSelectedItem());
-			if (clsmem.getClass().isArray()) {
+			if (selectedObj.getClass().isArray()) {
 				inputArrayNumberChoice.removeAll();
-				for (Integer i = 0; i < Array.getLength(clsmem); i++) {
+				for (Integer i = 0; i < Array.getLength(selectedObj); i++) {
 					inputArrayNumberChoice.add(i.toString());
 				}
 
 				inputArrayNumberChoice.setEnabled(true);
 				inputArrayNumberLabel.setEnabled(true);
 			} else {
+				//メソッドを使えるように更新する
+				createdMembers.setSelectedClass(selectedObj);
+				methodPanel.updateList(createdMembers.getSelectedClass().getClass());
+				methodPanel.setEnabled(true);
+
 				inputArrayNumberChoice.setEnabled(false);
 				inputArrayNumberLabel.setEnabled(false);
 			}
