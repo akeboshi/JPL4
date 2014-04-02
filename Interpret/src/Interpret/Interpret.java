@@ -33,8 +33,6 @@ import java.util.Arrays;
 public class Interpret extends Frame implements ActionListener, KeyListener,
 		ItemListener {
 	private static final long serialVersionUID = 1L;
-	private final static int MAX_PANEL_SIZE_X = 2;
-	private final static int MAX_PANEL_SIZE_Y = 20;
 
 	public static boolean INTERPRET = false;
 	public static InterpretConsole console;
