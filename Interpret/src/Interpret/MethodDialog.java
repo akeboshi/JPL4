@@ -19,8 +19,9 @@ class MethodDialog extends MembersDialog {
 		if (method.getReturnType() == void.class) {
 			try {
 				method.invoke(selectedObj, paramObjs);
-			} catch (IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
+			} catch (InvocationTargetException e) {
+				e.getCause().printStackTrace();
+			} catch (IllegalAccessException | IllegalArgumentException e) {
 				e.printStackTrace();
 			}
 			System.out.println(method.getName() + " return void");
