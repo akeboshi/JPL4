@@ -1,5 +1,6 @@
 package Interpret;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 
 class ConstructorDialog extends MembersDialog {
@@ -14,10 +15,16 @@ class ConstructorDialog extends MembersDialog {
 		try {
 			Object newObject = createdMembers.getSelectedConstructors()
 					.newInstance(paramObjs);
-			createdMembers
-					.addClassMap(createdMembers.getClassMap().size() + ": "
-							+ newObject.getClass().getCanonicalName(),
-							newObject);
+			Object selectedClass = createdMembers.getSelectedClass();
+			if (selectedClass != null && selectedClass.getClass().isArray()) {
+				Array.set(selectedClass,
+						createdMembers.getSelectedArrayNumber(), newObject);
+				owner.updateMethodAndFieldPanel(true);
+			} else {
+				createdMembers.addClassMap(createdMembers.getClassMap().size()
+						+ ": " + newObject.getClass().getCanonicalName(),
+						newObject);
+			}
 		} catch (InstantiationException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException e) {
 			// TODO 自動生成された catch ブロック

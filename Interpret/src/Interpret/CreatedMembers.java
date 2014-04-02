@@ -21,6 +21,7 @@ class CreatedMembers {
 	private Method selectedMethods = null;
 	private Constructor<?> selectedConstructors = null;
 	private Object selectedClass = null;
+	private Integer selectedArrayNumber = null;
 
 	public int sizeClassMap() {
 		return classMap.size();
@@ -109,6 +110,14 @@ class CreatedMembers {
 
 	public void setSelectedClass(Object selectedClass) {
 		this.selectedClass = selectedClass;
+	}
+
+	public Integer getSelectedArrayNumber() {
+		return selectedArrayNumber;
+	}
+
+	public void setSelectedArrayNumber(Integer selectedArrayNumber) {
+		this.selectedArrayNumber = selectedArrayNumber;
 	}
 
 }

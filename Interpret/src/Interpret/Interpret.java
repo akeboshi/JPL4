@@ -28,6 +28,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.PrintStream;
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class Interpret extends Frame implements ActionListener, KeyListener,
 		ItemListener {
@@ -54,8 +55,8 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 
 	private CreatedMembers createdMembers = new CreatedMembers();
 
-	private SuggestPanel constructerPanel = new SuggesterConstrucotrPanel("コンストラクタ",
-			createdMembers, this);
+	private SuggestPanel constructerPanel = new SuggesterConstrucotrPanel(
+			"コンストラクタ", createdMembers, this);
 	private SuggestPanel methodPanel = new SuggestMethodPanel("メソッド",
 			createdMembers, this);
 	private SuggestPanel fieldPanel = new SuggestFieldPanel("フィールド",
@@ -186,8 +187,6 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 
 		// 配列の番号を選ぶChoice
 		inputArrayNumberChoice.addItemListener(this);
-		inputArrayNumberChoice.add("0");
-		inputArrayNumberChoice.add("1");
 		addComponent(mainPanel, mainGBL, inputArrayNumberChoice, 1, panel_y++,
 				1, 1);
 
@@ -213,7 +212,7 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 	/**
 	 * インスタンスのリストをアップデート
 	 */
-	void refreshInstanceList(){
+	void refreshInstanceList() {
 		instanceList.removeAll();
 		for (String item : createdMembers.getClassMap().keySet()) {
 			if (item.indexOf(searchInstanceTextField.getText()) != -1)
@@ -303,6 +302,35 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		}
 	}
 
+	private void updateConstructorPanel() {
+		Integer inputANC = inputArrayNumberChoice.getSelectedIndex();
+		Object selectedObj = createdMembers.getSelectedClass();
+		if (Array.get(selectedObj, inputANC) == null) {
+			createdMembers.setSelectedArrayNumber(inputArrayNumberChoice
+					.getSelectedIndex());
+			System.out.println((createdMembers.getSelectedClass().getClass()));
+			constructerPanel.updateList(createdMembers.getSelectedClass()
+					.getClass().getComponentType());
+			updateMethodAndFieldPanel(false);
+			constructerPanel.setEnabled(true);
+		} else {
+			updateMethodAndFieldPanel(true);
+			constructerPanel.setEnabled(false);
+		}
+	}
+
+	void updateMethodAndFieldPanel(boolean b) {
+		Class<?> cls = createdMembers.getSelectedClass().getClass();
+		if (cls.isArray())
+			cls = cls.getComponentType();
+		// メソッドを使えるように更新する
+		// フィールドを使えるように更新
+		methodPanel.updateList(cls);
+		fieldPanel.updateList(cls);
+		methodPanel.setEnabled(b);
+		fieldPanel.setEnabled(b);
+	}
+
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if (e.getItemSelectable() == arrayCheckbox) {
@@ -311,26 +339,27 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		} else if (e.getItemSelectable() == instanceList) {
 			Object selectedObj = createdMembers.getClassMap().get(
 					instanceList.getSelectedItem());
+			createdMembers.setSelectedClass(selectedObj);
 			if (selectedObj.getClass().isArray()) {
 				inputArrayNumberChoice.removeAll();
 				for (Integer i = 0; i < Array.getLength(selectedObj); i++) {
 					inputArrayNumberChoice.add(i.toString());
 				}
+				System.out.println(Arrays.deepToString((Object[]) selectedObj));
+
+				updateConstructorPanel();
 
 				inputArrayNumberChoice.setEnabled(true);
 				inputArrayNumberLabel.setEnabled(true);
 			} else {
-				//メソッドを使えるように更新する
-				createdMembers.setSelectedClass(selectedObj);
-				methodPanel.updateList(createdMembers.getSelectedClass().getClass());
-				methodPanel.setEnabled(true);
-				//フィールドを使えるように更新
-				fieldPanel.updateList(createdMembers.getSelectedClass().getClass());
-				fieldPanel.setEnabled(true);
+
+				updateMethodAndFieldPanel(true);
 
 				inputArrayNumberChoice.setEnabled(false);
 				inputArrayNumberLabel.setEnabled(false);
 			}
+		} else if (e.getItemSelectable() == inputArrayNumberChoice) {
+			updateConstructorPanel();
 		}
 
 	}

@@ -27,11 +27,10 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static int LIST_ROW = 8;
+	private static int LIST_ROW = 5;
 
 	protected Interpret owner;
 	protected CreatedMembers createdMembers;
-	private String dialogName;
 	protected Integer paramSize;
 	protected ArrayList<Class<?>> paramTypes = new ArrayList<Class<?>>();
 	protected Object[] paramObjs;
@@ -53,7 +52,6 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 			String dialogName) {
 		super(owner, true);
 		this.owner = owner;
-		this.dialogName = dialogName;
 		this.createdMembers = createdMembers;
 
 		setParams();
@@ -112,7 +110,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 					panel_y++, 1, 1);
 
 			// 検索結果リスト
-			componentList.add(new List());
+			componentList.add(new List(LIST_ROW));
 			componentList.get(i).addItemListener(this);
 			addComponent(dialogPanel, gbl, componentList.get(i), 0, panel_y++,
 					2, 1);

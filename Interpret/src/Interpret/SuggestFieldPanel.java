@@ -15,9 +15,19 @@ class SuggestFieldPanel extends SuggestPanel {
 	@Override
 	void updateList(Class<?> cls) {
 		Map<String, Field> fields = new TreeMap<String, Field>();
-		for (Field f : cls.getDeclaredFields()) {
-			String fieldName = f.toString();
-			fields.put(fieldName, f);
+		try {
+			for (Field f : cls.getDeclaredFields()) {
+				String fieldName;
+				boolean accessFlag = f.isAccessible();
+				f.setAccessible(true);
+				fieldName = f.toString()
+						+ " = " + f.get(createdMembers.getSelectedClass()).toString();
+				f.setAccessible(accessFlag);
+				fields.put(fieldName, f);
+			}
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
 		}
 		createdMembers.setFields(fields);
 
