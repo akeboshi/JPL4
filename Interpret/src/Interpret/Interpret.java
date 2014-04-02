@@ -324,6 +324,9 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 				createdMembers.setSelectedClass(selectedObj);
 				methodPanel.updateList(createdMembers.getSelectedClass().getClass());
 				methodPanel.setEnabled(true);
+				//フィールドを使えるように更新
+				fieldPanel.updateList(createdMembers.getSelectedClass().getClass());
+				fieldPanel.setEnabled(true);
 
 				inputArrayNumberChoice.setEnabled(false);
 				inputArrayNumberLabel.setEnabled(false);

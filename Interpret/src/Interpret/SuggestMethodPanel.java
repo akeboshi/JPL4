@@ -3,6 +3,7 @@ package Interpret;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.TreeMap;
 
 class SuggestMethodPanel extends SuggestPanel {
 
@@ -12,7 +13,7 @@ class SuggestMethodPanel extends SuggestPanel {
 
 	@Override
 	void updateList(Class<?> methodClass) {
-		Map<String,Method> methodMap = createdMembers.getMethods();
+		Map<String,Method> methodMap = new TreeMap<String, Method>();
 		while (methodClass != Object.class) {
 			for (Method method : methodClass.getDeclaredMethods()) {
 				String methodName = "";

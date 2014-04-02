@@ -51,7 +51,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 
 	public MembersDialog(Interpret owner, CreatedMembers createdMembers,
 			String dialogName) {
-		super(owner);
+		super(owner, true);
 		this.owner = owner;
 		this.dialogName = dialogName;
 		this.createdMembers = createdMembers;
