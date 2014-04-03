@@ -114,7 +114,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 			componentList.get(i).addItemListener(this);
 			addComponent(dialogPanel, gbl, componentList.get(i), 0, panel_y++,
 					2, 1);
-			for(String objKey : createdMembers.getClassMap().keySet()){
+			for (String objKey : createdMembers.getClassMap().keySet()) {
 				componentList.get(i).add(objKey);
 			}
 
@@ -174,8 +174,8 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 				// 文字列から取得ボタンを押された時に、文字列から取得の文字列を取得して、
 				// そのフィールドのクラスに変換する
 				// ただし、プリミティブ型ではないときはnullが返される
-				setObj = createObjFromString(paramFromStringTextField
-						.get(i).getText(), paramTypes.get(i));
+				setObj = createObjFromString(paramFromStringTextField.get(i)
+						.getText(), paramTypes.get(i));
 				paramObjs[i] = setObj;
 				setParamLabel.get(i).setText(setObj.toString());
 			} else if (e.getSource() == setFromObjectButton.get(i)) {
@@ -184,7 +184,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 				setParamLabel.get(i).setText(setObj.toString());
 			}
 		}
-		if(e.getSource() == jikkoButton){
+		if (e.getSource() == jikkoButton) {
 			doReflectMember();
 			setVisible(false);
 		}
@@ -254,25 +254,42 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		// 何もしない
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		// 何もしない
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-
+		for (int i = 0; i < paramSize; i++) {
+			if (e.getComponent() == searchTextField.get(i)) {
+				componentList.get(i).removeAll();
+				for (String item : createdMembers.getClassMap().keySet()) {
+					if (item.indexOf(searchTextField.get(i).getText()) != -1)
+						componentList.get(i).add(item);
+				}
+			} else if(e.getComponent() == paramFromStringTextField.get(i)){
+				if(e.getKeyChar() == '\n'){
+					Object setObj;
+					setObj = createObjFromString(paramFromStringTextField.get(i)
+							.getText(), paramTypes.get(i));
+					paramObjs[i] = setObj;
+					setParamLabel.get(i).setText(setObj.toString());
+				}
+			}
+		}
 	}
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
-
+		for (int i = 0; i < paramSize; i++) {
+			if (e.getItemSelectable() == componentList.get(i)){
+				paramObjs[i] = componentList.get(i);
+				setParamLabel.get(i).setText(paramObjs[i].toString());
+			}
+		}
 	}
 }

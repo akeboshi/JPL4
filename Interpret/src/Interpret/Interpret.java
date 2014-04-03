@@ -272,19 +272,16 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO 自動生成されたメソッド・スタブ
 		if (e.getComponent() == searchInstanceTextField) {
 			instanceList.removeAll();
 			for (String item : createdMembers.getClassMap().keySet()) {
