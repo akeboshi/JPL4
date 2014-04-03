@@ -34,8 +34,7 @@ class SuggestFieldPanel extends SuggestPanel {
 					f.setAccessible(true);
 					fieldName = f.toString()
 							+ " = "
-							+ f.get(selectedObj)
-									.toString();
+							+ f.get(selectedObj);
 					fields.put(fieldName, f);
 					f.setAccessible(accessFlag);
 				}

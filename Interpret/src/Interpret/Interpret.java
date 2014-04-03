@@ -16,7 +16,6 @@ import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.Panel;
-import java.awt.ScrollPane;
 import java.awt.TextArea;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -55,11 +54,16 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 	private CreatedMembers createdMembers = new CreatedMembers();
 
 	private SuggestPanel constructerPanel = new SuggesterConstrucotrPanel(
-			"                                                          コンストラクタを実行する                                                          ", createdMembers, this);
-	private SuggestPanel methodPanel = new SuggestMethodPanel("                                                                メソッドを実行する                                                                ",
+			"                                                          コンストラクタを実行する                                                          ",
 			createdMembers, this);
-	private SuggestPanel fieldPanel = new SuggestFieldPanel("                                                                フィールドを変更する                                                                ",
+	private SuggestPanel methodPanel = new SuggestMethodPanel(
+			"                                                                メソッドを実行する                                                                ",
 			createdMembers, this);
+	private SuggestPanel fieldPanel = new SuggestFieldPanel(
+			"                                                                フィールドを変更する                                                                ",
+			createdMembers, this);
+
+	private TextArea area = null;
 
 	public static void main(String args[]) {
 		new Interpret();
@@ -69,30 +73,17 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		super();
 
 		if (!INTERPRET) {
-			TextArea area = new TextArea();
+			 area = new TextArea();
 			area.setEditable(false);
 			area.setBackground(Color.white);
 			console = new InterpretConsole(area);
-			ScrollPane scroll = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
-			scroll.add(area);
-
-			Frame frame = new Frame("Console");
-			frame.addWindowListener(new WindowAdapter() {
-				public void windowClosing(WindowEvent we) {
-					System.exit(0);
-				}
-			});
-			frame.add(scroll);
-			frame.setBounds(0, 380, 500, 300);
-			frame.setVisible(true);
-
 			stream = new PrintStream(console, true);
 			INTERPRET = true;
 		}
 		System.setOut(stream);
 		System.setErr(stream);
 
-		setSize(1000, 550);
+		setSize(1000, 750);
 		createMenu();
 		createComponent();
 
@@ -123,51 +114,59 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		mainPanel.setLayout(mainPanelGBL);
 		setLayout(interpretGBL);
 
-		addComponent(this,interpretGBL,mainPanel,0,0,1,3);
-		addComponent(this,interpretGBL,constructerPanel,1,0,3,1);
-		addComponent(this,interpretGBL,methodPanel,1,1,3,1);
-		addComponent(this,interpretGBL,fieldPanel,1,2,3,1);
 		int panel_y = 0;
+		addComponent(this, interpretGBL, mainPanel, 0, panel_y, 1, 3);
+		addComponent(this, interpretGBL, constructerPanel, 1, panel_y++, 3, 1);
+		addComponent(this, interpretGBL, methodPanel, 1, panel_y++, 3, 1);
+		addComponent(this, interpretGBL, fieldPanel, 1, panel_y++, 3, 1);
+		addComponent(this, interpretGBL, new Label("----------------------------------------------------------------------------------------------------コンソール----------------------------------------------------------------------------------------------------"), 0, panel_y++, 4, 1);
+		if (area != null)
+			addComponent(this, interpretGBL, area, 0, panel_y++, 4, 1);
+		panel_y = 0;
 
 		// クラスネーム入力を促すラベル
-		addComponent(mainPanel, mainPanelGBL, new Label("インスタンスを作成したいクラス名を入力"), 0,
-				panel_y++, 2, 1);
+		addComponent(mainPanel, mainPanelGBL, new Label("インスタンスを作成したいクラス名を入力"),
+				0, panel_y++, 2, 1);
 
 		// クラスネーム入力フィールド
 		classNameTextField.addKeyListener(this);
-		addComponent(mainPanel, mainPanelGBL, classNameTextField, 0, panel_y++, 2, 1);
+		addComponent(mainPanel, mainPanelGBL, classNameTextField, 0, panel_y++,
+				2, 1);
 
 		// 配列用チェックボックス
 		arrayCheckbox.addItemListener(this);
 		addComponent(mainPanel, mainPanelGBL, arrayCheckbox, 0, panel_y++, 1, 1);
 
 		// 配列の個数入力誘導パネル
-		addComponent(mainPanel, mainPanelGBL, arrayNumberLabel, 0, panel_y, 1, 1);
+		addComponent(mainPanel, mainPanelGBL, arrayNumberLabel, 0, panel_y, 1,
+				1);
 
 		// 配列数入力用フィールド
 		arrayNumberTextField.addKeyListener(this);
 		arrayNumberTextField.setEnabled(arrayCheckbox.getState());
-		addComponent(mainPanel, mainPanelGBL, arrayNumberTextField, 1, panel_y++, 1,
-				1);
+		addComponent(mainPanel, mainPanelGBL, arrayNumberTextField, 1,
+				panel_y++, 1, 1);
 
 		// インスタンス作成ボタン
 		instanceCreatingButton.addActionListener(this);
-		addComponent(mainPanel, mainPanelGBL, instanceCreatingButton, 0, panel_y++,
-				2, 1);
+		addComponent(mainPanel, mainPanelGBL, instanceCreatingButton, 0,
+				panel_y++, 2, 1);
 
 		// インスタンス表のラベル
 		searchListLabel.setEnabled(false);
-		addComponent(mainPanel, mainPanelGBL, searchListLabel, 0, panel_y++, 2, 1);
+		addComponent(mainPanel, mainPanelGBL, searchListLabel, 0, panel_y++, 2,
+				1);
 
 		// 検索ラベル
 		searchInstanceLabel.setEnabled(false);
-		addComponent(mainPanel, mainPanelGBL, searchInstanceLabel, 0, panel_y, 1, 1);
+		addComponent(mainPanel, mainPanelGBL, searchInstanceLabel, 0, panel_y,
+				1, 1);
 
 		// インスタンス検索用
 		searchInstanceTextField.addKeyListener(this);
 		searchInstanceTextField.setEnabled(false);
-		addComponent(mainPanel, mainPanelGBL, searchInstanceTextField, 1, panel_y++,
-				1, 1);
+		addComponent(mainPanel, mainPanelGBL, searchInstanceTextField, 1,
+				panel_y++, 1, 1);
 
 		// インスタンスの表
 		instanceList.addItemListener(this);
@@ -176,13 +175,13 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 
 		// 配列の番号を入力を促すラベル
 		inputArrayNumberLabel.setEnabled(false);
-		addComponent(mainPanel, mainPanelGBL, inputArrayNumberLabel, 0, panel_y, 1,
-				1);
+		addComponent(mainPanel, mainPanelGBL, inputArrayNumberLabel, 0,
+				panel_y, 1, 1);
 
 		// 配列の番号を選ぶChoice
 		inputArrayNumberChoice.addItemListener(this);
-		addComponent(mainPanel, mainPanelGBL, inputArrayNumberChoice, 1, panel_y++,
-				1, 1);
+		addComponent(mainPanel, mainPanelGBL, inputArrayNumberChoice, 1,
+				panel_y++, 1, 1);
 
 		setVisible(true);
 	}
