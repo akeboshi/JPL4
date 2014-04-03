@@ -1,6 +1,7 @@
 package Interpret;
 
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.TreeMap;
@@ -15,27 +16,39 @@ class SuggestFieldPanel extends SuggestPanel {
 	@Override
 	void updateList(Class<?> cls) {
 		Map<String, Field> fields = new TreeMap<String, Field>();
-		try {
-			for (Field f : cls.getDeclaredFields()) {
-				String fieldName;
-				boolean accessFlag = f.isAccessible();
-				f.setAccessible(true);
-				fieldName = f.toString()
-						+ " = " + f.get(createdMembers.getSelectedClass()).toString();
-				f.setAccessible(accessFlag);
-				fields.put(fieldName, f);
-			}
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-		createdMembers.setFields(fields);
+		Object selectedObj = createdMembers.getSelectedClass();
+		cls = selectedObj.getClass();
 
 		componentList.removeAll();
-		for (String fieldKey : createdMembers.getFields().keySet()) {
-			componentList.add(fieldKey);
-		}
+		if (cls.isArray() && Array.get(selectedObj, createdMembers.getSelectedArrayNumber()) == null) {
 
+		} else {
+			try {
+				if(cls.isArray()){
+					cls = cls.getComponentType();
+					selectedObj = Array.get(selectedObj, createdMembers.getSelectedArrayNumber());
+				}
+				for (Field f : cls.getDeclaredFields()) {
+					String fieldName;
+					boolean accessFlag = f.isAccessible();
+					f.setAccessible(true);
+					fieldName = f.toString()
+							+ " = "
+							+ f.get(selectedObj)
+									.toString();
+					fields.put(fieldName, f);
+					f.setAccessible(accessFlag);
+				}
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+			createdMembers.setFields(fields);
+
+			for (String fieldKey : createdMembers.getFields().keySet()) {
+				componentList.add(fieldKey);
+			}
+		}
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import java.awt.event.KeyListener;
 
 abstract class SuggestPanel extends Panel implements KeyListener, ItemListener,
 		ActionListener {
-	private static int LIST_ROW = 15;
+	private static int LIST_ROW = 5;
 
 	protected CreatedMembers createdMembers;
 	protected MembersDialog membersDialog;
@@ -76,9 +76,11 @@ abstract class SuggestPanel extends Panel implements KeyListener, ItemListener,
 		// 検索結果リスト
 		componentList.addItemListener(this);
 		addComponent(this, gbl, componentList, 0, panel_y++, 2, 1);
+		componentList.setSize(500, 150);
 
 		// 実行ボタン
 		jikkoButton.addActionListener(this);
+		jikkoButton.setSize(750, 20);
 		addComponent(this, gbl, jikkoButton, 0, panel_y++, 2, 1);
 	}
 

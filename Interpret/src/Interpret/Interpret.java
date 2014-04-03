@@ -254,6 +254,7 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 			// 配列ではない時
 			try {
 				// TODO コンストラクタを実行してくださいというDialog
+				createdMembers.setSelectedClass(null);
 				constructerPanel.updateList(Class.forName(classString));
 				constructerPanel.setEnabled(true);
 			} catch (ClassNotFoundException e) {
