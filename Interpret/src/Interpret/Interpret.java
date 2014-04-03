@@ -199,8 +199,16 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		Menu1.add(closem);
 
 		// イベントリスクの設定
-		closem.addActionListener(this);
+		closem.addActionListener(new ActionAdapter(){
+			public void actionPerformed(ActionEvent e){
+				System.exit(0);
+			}
+		});
 	}
+
+	 abstract class ActionAdapter implements ActionListener {
+		    public abstract void actionPerformed(ActionEvent ev);
+		  }
 
 	/**
 	 * インスタンスのリストをアップデート
