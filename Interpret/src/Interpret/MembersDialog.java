@@ -169,17 +169,16 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		for (Integer i = 0; i < paramSize; i++) {
-			Object setObj;
 			if (e.getSource() == setFromTextButton.get(i)) {
 				// 文字列から取得ボタンを押された時に、文字列から取得の文字列を取得して、
 				// そのフィールドのクラスに変換する
 				// ただし、プリミティブ型ではないときはnullが返される
-				setObj = createObjFromString(paramFromStringTextField.get(i)
+				Object setObj = createObjFromString(paramFromStringTextField.get(i)
 						.getText(), paramTypes.get(i));
 				paramObjs[i] = setObj;
 				setParamLabel.get(i).setText(setObj.toString());
 			} else if (e.getSource() == setFromObjectButton.get(i)) {
-				setObj = componentList.get(i).getSelectedItem();
+				String setObj = componentList.get(i).getSelectedItem();
 				paramObjs[i] = createdMembers.getClassMap().get(setObj);
 				setParamLabel.get(i).setText(setObj.toString());
 			}
@@ -287,8 +286,9 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 	public void itemStateChanged(ItemEvent e) {
 		for (int i = 0; i < paramSize; i++) {
 			if (e.getItemSelectable() == componentList.get(i)){
-				paramObjs[i] = componentList.get(i);
-				setParamLabel.get(i).setText(paramObjs[i].toString());
+				String setObj = componentList.get(i).getSelectedItem();
+				paramObjs[i] = createdMembers.getClassMap().get(setObj);
+				setParamLabel.get(i).setText(setObj.toString());
 			}
 		}
 	}
