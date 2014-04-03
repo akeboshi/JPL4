@@ -10,7 +10,7 @@ class SuggestFieldPanel extends SuggestPanel {
 
 	SuggestFieldPanel(String panelName, CreatedMembers createdMembers,
 			Interpret interpret) {
-		super(panelName + "を変更する", createdMembers, interpret);
+		super(panelName, createdMembers, interpret);
 	}
 
 	@Override

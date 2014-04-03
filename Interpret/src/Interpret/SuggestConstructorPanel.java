@@ -9,7 +9,7 @@ class SuggesterConstrucotrPanel extends SuggestPanel {
 
 	SuggesterConstrucotrPanel(String panelName, CreatedMembers createdMembers,
 			Interpret interpret) {
-		super(panelName + "を実行する", createdMembers, interpret);
+		super(panelName, createdMembers, interpret);
 	}
 
 	@Override

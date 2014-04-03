@@ -5,10 +5,11 @@ import java.awt.Checkbox;
 import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Label;
 import java.awt.List;
 import java.awt.Menu;
@@ -33,7 +34,7 @@ import java.util.Arrays;
 public class Interpret extends Frame implements ActionListener, KeyListener,
 		ItemListener {
 	private static final long serialVersionUID = 1L;
-
+	private static final int ROW_SIZE = 12;
 	public static boolean INTERPRET = false;
 	public static InterpretConsole console;
 	public static PrintStream stream;
@@ -47,23 +48,18 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 	private Label searchListLabel = new Label("実行するインスタンスをリストから選択");
 	private Label searchInstanceLabel = new Label("検索: ");
 	private TextField searchInstanceTextField = new TextField();
-	private List instanceList = new List();
+	private List instanceList = new List(ROW_SIZE);
 	private Choice inputArrayNumberChoice = new Choice();
 	private Label inputArrayNumberLabel = new Label("配列の番号を入力");
 
 	private CreatedMembers createdMembers = new CreatedMembers();
 
 	private SuggestPanel constructerPanel = new SuggesterConstrucotrPanel(
-			"コンストラクタ", createdMembers, this);
-	private SuggestPanel methodPanel = new SuggestMethodPanel("メソッド",
+			"                                                          コンストラクタを実行する                                                          ", createdMembers, this);
+	private SuggestPanel methodPanel = new SuggestMethodPanel("                                                                メソッドを実行する                                                                ",
 			createdMembers, this);
-	private SuggestPanel fieldPanel = new SuggestFieldPanel("フィールド",
+	private SuggestPanel fieldPanel = new SuggestFieldPanel("                                                                フィールドを変更する                                                                ",
 			createdMembers, this);
-
-	@SuppressWarnings("unused")
-	private Integer changeTest = 123;
-	@SuppressWarnings("unused")
-	private String testString = "str";
 
 	public static void main(String args[]) {
 		new Interpret();
@@ -96,7 +92,7 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		System.setOut(stream);
 		System.setErr(stream);
 
-		setSize(1000, 500);
+		setSize(1000, 550);
 		createMenu();
 		createComponent();
 
@@ -107,7 +103,7 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		});
 	}
 
-	private void addComponent(Panel panel, GridBagLayout gbl,
+	private void addComponent(Container panel, GridBagLayout gbl,
 			Component component, int x, int y, int w, int h) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
@@ -115,77 +111,77 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		gbc.gridy = y;
 		gbc.gridwidth = w;
 		gbc.gridheight = h;
+		gbc.insets = new Insets(2, 2, 2, 2);
 		gbl.setConstraints(component, gbc);
 		panel.add(component);
 	}
 
 	private void createComponent() {
+		GridBagLayout interpretGBL = new GridBagLayout();
 		Panel mainPanel = new Panel();
-		GridBagLayout mainGBL = new GridBagLayout();
-		mainPanel.setLayout(mainGBL);
-		setLayout(new GridLayout(1, 4));
-		add(mainPanel);
-		add(constructerPanel);
-		add(methodPanel);
-		add(fieldPanel);
-		constructerPanel.setEnabled(false);
-		methodPanel.setEnabled(false);
-		fieldPanel.setEnabled(false);
+		GridBagLayout mainPanelGBL = new GridBagLayout();
+		mainPanel.setLayout(mainPanelGBL);
+		setLayout(interpretGBL);
+
+		addComponent(this,interpretGBL,mainPanel,0,0,1,3);
+		addComponent(this,interpretGBL,constructerPanel,1,0,3,1);
+		addComponent(this,interpretGBL,methodPanel,1,1,3,1);
+		addComponent(this,interpretGBL,fieldPanel,1,2,3,1);
 		int panel_y = 0;
 
 		// クラスネーム入力を促すラベル
-		addComponent(mainPanel, mainGBL, new Label("インスタンスを作成したいクラス名を入力"), 0,
+		addComponent(mainPanel, mainPanelGBL, new Label("インスタンスを作成したいクラス名を入力"), 0,
 				panel_y++, 2, 1);
 
 		// クラスネーム入力フィールド
 		classNameTextField.addKeyListener(this);
-		addComponent(mainPanel, mainGBL, classNameTextField, 0, panel_y++, 2, 1);
+		addComponent(mainPanel, mainPanelGBL, classNameTextField, 0, panel_y++, 2, 1);
 
 		// 配列用チェックボックス
 		arrayCheckbox.addItemListener(this);
-		addComponent(mainPanel, mainGBL, arrayCheckbox, 0, panel_y++, 1, 1);
+		addComponent(mainPanel, mainPanelGBL, arrayCheckbox, 0, panel_y++, 1, 1);
 
 		// 配列の個数入力誘導パネル
-		addComponent(mainPanel, mainGBL, arrayNumberLabel, 0, panel_y, 1, 1);
+		addComponent(mainPanel, mainPanelGBL, arrayNumberLabel, 0, panel_y, 1, 1);
 
 		// 配列数入力用フィールド
 		arrayNumberTextField.addKeyListener(this);
 		arrayNumberTextField.setEnabled(arrayCheckbox.getState());
-		addComponent(mainPanel, mainGBL, arrayNumberTextField, 1, panel_y++, 1,
+		addComponent(mainPanel, mainPanelGBL, arrayNumberTextField, 1, panel_y++, 1,
 				1);
 
 		// インスタンス作成ボタン
 		instanceCreatingButton.addActionListener(this);
-		addComponent(mainPanel, mainGBL, instanceCreatingButton, 0, panel_y++,
+		addComponent(mainPanel, mainPanelGBL, instanceCreatingButton, 0, panel_y++,
 				2, 1);
 
 		// インスタンス表のラベル
 		searchListLabel.setEnabled(false);
-		addComponent(mainPanel, mainGBL, searchListLabel, 0, panel_y++, 2, 1);
+		addComponent(mainPanel, mainPanelGBL, searchListLabel, 0, panel_y++, 2, 1);
 
 		// 検索ラベル
 		searchInstanceLabel.setEnabled(false);
-		addComponent(mainPanel, mainGBL, searchInstanceLabel, 0, panel_y, 1, 1);
+		addComponent(mainPanel, mainPanelGBL, searchInstanceLabel, 0, panel_y, 1, 1);
 
 		// インスタンス検索用
 		searchInstanceTextField.addKeyListener(this);
 		searchInstanceTextField.setEnabled(false);
-		addComponent(mainPanel, mainGBL, searchInstanceTextField, 1, panel_y++,
+		addComponent(mainPanel, mainPanelGBL, searchInstanceTextField, 1, panel_y++,
 				1, 1);
 
 		// インスタンスの表
 		instanceList.addItemListener(this);
 		instanceList.setEnabled(false);
-		addComponent(mainPanel, mainGBL, instanceList, 0, panel_y++, 2, 1);
+		addComponent(mainPanel, mainPanelGBL, instanceList, 0, panel_y++, 2, 1);
 
 		// 配列の番号を入力を促すラベル
 		inputArrayNumberLabel.setEnabled(false);
-		addComponent(mainPanel, mainGBL, inputArrayNumberLabel, 0, panel_y, 1,
+		addComponent(mainPanel, mainPanelGBL, inputArrayNumberLabel, 0, panel_y, 1,
 				1);
 
 		// 配列の番号を選ぶChoice
 		inputArrayNumberChoice.addItemListener(this);
-		addComponent(mainPanel, mainGBL, inputArrayNumberChoice, 1, panel_y++,
+		addComponent(mainPanel, mainPanelGBL, inputArrayNumberChoice, 1, panel_y++,
 				1, 1);
 
 		setVisible(true);
