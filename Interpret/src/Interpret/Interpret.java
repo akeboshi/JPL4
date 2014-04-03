@@ -115,6 +115,9 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		setLayout(interpretGBL);
 
 		int panel_y = 0;
+		constructerPanel.setEnabled(false);
+		methodPanel.setEnabled(false);
+		fieldPanel.setEnabled(false);
 		addComponent(this, interpretGBL, mainPanel, 0, panel_y, 1, 3);
 		addComponent(this, interpretGBL, constructerPanel, 1, panel_y++, 3, 1);
 		addComponent(this, interpretGBL, methodPanel, 1, panel_y++, 3, 1);
