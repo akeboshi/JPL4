@@ -6,6 +6,7 @@ import java.awt.Dialog;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Label;
 import java.awt.List;
 import java.awt.Panel;
@@ -58,7 +59,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 		createPanel();
 
 		paramObjs = new Object[paramSize];
-		setSize(150 * (paramSize + 1), 300);
+		setSize(170 * (paramSize + 1), 300);
 		setResizable(false);
 		setTitle(dialogName);
 
@@ -97,6 +98,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 			addComponent(dialogPanel, gbl, paramFromStringTextField.get(i), 0,
 					panel_y++, 2, 1);
 
+
 			// 検索ラベル
 			searchLabel.add(new Label(searchLabelText));
 			addComponent(dialogPanel, gbl, new Label("インスタンスから取得"), 0,
@@ -118,11 +120,15 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 				componentList.get(i).add(objKey);
 			}
 
-			// テキストから引数をゲットするためのボタン
-			setFromTextButton.add(new Button("文字列から取得"));
-			setFromTextButton.get(i).addActionListener(this);
-			addComponent(dialogPanel, gbl, setFromTextButton.get(i), 0,
-					panel_y++, 2, 1);
+				// テキストから引数をゲットするためのボタン
+				setFromTextButton.add(new Button("文字列から取得"));
+				setFromTextButton.get(i).addActionListener(this);
+				addComponent(dialogPanel, gbl, setFromTextButton.get(i), 0,
+						panel_y++, 2, 1);
+				if (createObjFromString("1", paramTypes.get(i)) == null){
+					paramFromStringTextField.get(i).setEnabled(false);
+					setFromTextButton.get(i).setEnabled(false);
+				}
 
 			// オブジェクトから引数をゲットするためのボタン
 			setFromObjectButton.add(new Button("インスタンスから取得"));
@@ -140,6 +146,10 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 
 		int panel_y = 0;
 
+		if (paramSize != 0) {
+			addComponent(actionPanel, gbl, new Label("引数一覧"), 0, panel_y++, 1,
+					1);
+		}
 		for (Integer i = 0; i < paramSize; i++) {
 			setParamLabel.add(new Label("null"));
 			addComponent(actionPanel, gbl, setParamLabel.get(i), 0, panel_y++,
@@ -160,6 +170,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 		gbc.gridy = y;
 		gbc.gridwidth = w;
 		gbc.gridheight = h;
+		gbc.insets = new Insets(2, 2, 2, 2);
 		gbl.setConstraints(component, gbc);
 		panel.add(component);
 	}
@@ -168,19 +179,29 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		for (Integer i = 0; i < paramSize; i++) {
+		for (Integer i = 0; i < setFromTextButton.size(); i++) {
 			if (e.getSource() == setFromTextButton.get(i)) {
 				// 文字列から取得ボタンを押された時に、文字列から取得の文字列を取得して、
 				// そのフィールドのクラスに変換する
 				// ただし、プリミティブ型ではないときはnullが返される
-				Object setObj = createObjFromString(paramFromStringTextField.get(i)
-						.getText(), paramTypes.get(i));
+				Object setObj = createObjFromString(paramFromStringTextField
+						.get(i).getText(), paramTypes.get(i));
 				paramObjs[i] = setObj;
-				setParamLabel.get(i).setText(setObj.toString());
-			} else if (e.getSource() == setFromObjectButton.get(i)) {
-				String setObj = componentList.get(i).getSelectedItem();
-				paramObjs[i] = createdMembers.getClassMap().get(setObj);
-				setParamLabel.get(i).setText(setObj.toString());
+				if (setObj == null) {
+					setParamLabel.get(i).setText("null");
+					System.out.println(paramTypes.get(i) + "文字列から取得出来ません");
+				} else {
+					setParamLabel.get(i).setText(setObj.toString());
+				}
+			}
+		}
+		for (Integer i = 0; i < setFromObjectButton.size(); i++) {
+			if (e.getSource() == setFromObjectButton.get(i)) {
+				Object setObj = componentList.get(i).getSelectedItem();
+				if (setObj != null) {
+					paramObjs[i] = createdMembers.getClassMap().get(setObj);
+					setParamLabel.get(i).setText(setObj.toString());
+				}
 			}
 		}
 		if (e.getSource() == jikkoButton) {
@@ -270,11 +291,11 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 					if (item.indexOf(searchTextField.get(i).getText()) != -1)
 						componentList.get(i).add(item);
 				}
-			} else if(e.getComponent() == paramFromStringTextField.get(i)){
-				if(e.getKeyChar() == '\n'){
+			} else if (e.getComponent() == paramFromStringTextField.get(i)) {
+				if (e.getKeyChar() == '\n') {
 					Object setObj;
-					setObj = createObjFromString(paramFromStringTextField.get(i)
-							.getText(), paramTypes.get(i));
+					setObj = createObjFromString(paramFromStringTextField
+							.get(i).getText(), paramTypes.get(i));
 					paramObjs[i] = setObj;
 					setParamLabel.get(i).setText(setObj.toString());
 				}
@@ -285,7 +306,7 @@ abstract class MembersDialog extends Dialog implements KeyListener,
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		for (int i = 0; i < paramSize; i++) {
-			if (e.getItemSelectable() == componentList.get(i)){
+			if (e.getItemSelectable() == componentList.get(i)) {
 				String setObj = componentList.get(i).getSelectedItem();
 				paramObjs[i] = createdMembers.getClassMap().get(setObj);
 				setParamLabel.get(i).setText(setObj.toString());

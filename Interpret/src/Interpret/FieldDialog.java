@@ -1,5 +1,6 @@
 package Interpret;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 class FieldDialog extends MembersDialog {
@@ -13,9 +14,16 @@ class FieldDialog extends MembersDialog {
 	void doReflectMember() {
 		Field field = createdMembers.getSelectedField();
 		Object selectedObj = createdMembers.getSelectedClass();
+		Class<?> cls = selectedObj.getClass();
 		boolean accessFlag = field.isAccessible();
 
 		field.setAccessible(true);
+		if (cls.isArray()
+				&& Array.get(selectedObj,
+						createdMembers.getSelectedArrayNumber()) != null) {
+			selectedObj = Array.get(selectedObj,
+					createdMembers.getSelectedArrayNumber());
+		}
 		try {
 			field.set(selectedObj, paramObjs[0]);
 		} catch (IllegalArgumentException e) {
@@ -30,8 +38,10 @@ class FieldDialog extends MembersDialog {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+		} finally {
+			field.setAccessible(accessFlag);
+			owner.updateAllPanel();
 		}
-		field.setAccessible(accessFlag);
 	}
 
 	@Override

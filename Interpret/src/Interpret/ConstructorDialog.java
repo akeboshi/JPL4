@@ -30,6 +30,7 @@ class ConstructorDialog extends MembersDialog {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
+		owner.setEnableConstructor(false);
 		owner.refreshInstanceList();
 	}
 

@@ -100,16 +100,18 @@ abstract class SuggestPanel extends Panel implements KeyListener, ItemListener,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jikkoButton) {
-			setSelectedItem();
-			setMembersDialog();
-			membersDialog.setVisible(true);
+			if (componentList.getSelectedItem() != null) {
+				setSelectedItem();
+				setMembersDialog();
+				membersDialog.setVisible(true);
+			}
 		}
 
 	}
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		if(e.getItemSelectable() == componentList){
+		if (e.getItemSelectable() == componentList) {
 			setSelectedItem();
 			setMembersDialog();
 			membersDialog.setVisible(true);

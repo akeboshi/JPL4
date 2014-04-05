@@ -28,15 +28,18 @@ class SuggestFieldPanel extends SuggestPanel {
 					cls = cls.getComponentType();
 					selectedObj = Array.get(selectedObj, createdMembers.getSelectedArrayNumber());
 				}
-				for (Field f : cls.getDeclaredFields()) {
-					String fieldName;
-					boolean accessFlag = f.isAccessible();
-					f.setAccessible(true);
-					fieldName = f.toString()
-							+ " = "
-							+ f.get(selectedObj);
-					fields.put(fieldName, f);
-					f.setAccessible(accessFlag);
+				while (cls != Object.class) {
+					for (Field f : cls.getDeclaredFields()) {
+						String fieldName;
+						boolean accessFlag = f.isAccessible();
+						f.setAccessible(true);
+						fieldName = f.toString()
+								+ " = "
+								+ f.get(selectedObj);
+						fields.put(fieldName, f);
+						f.setAccessible(accessFlag);
+					}
+					cls = cls.getSuperclass();
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				// TODO 自動生成された catch ブロック

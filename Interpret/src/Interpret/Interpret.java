@@ -73,7 +73,7 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		super();
 
 		if (!INTERPRET) {
-			 area = new TextArea();
+			area = new TextArea();
 			area.setEditable(false);
 			area.setBackground(Color.white);
 			console = new InterpretConsole(area);
@@ -122,7 +122,7 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		addComponent(this, interpretGBL, constructerPanel, 1, panel_y++, 3, 1);
 		addComponent(this, interpretGBL, methodPanel, 1, panel_y++, 3, 1);
 		addComponent(this, interpretGBL, fieldPanel, 1, panel_y++, 3, 1);
-		addComponent(this, interpretGBL, new Label("----------------------------------------------------------------------------------------------------コンソール----------------------------------------------------------------------------------------------------"), 0, panel_y++, 4, 1);
+		addComponent(this, interpretGBL, new Label("コンソール"), 0, panel_y++, 4, 1);
 		if (area != null)
 			addComponent(this, interpretGBL, area, 0, panel_y++, 4, 1);
 		panel_y = 0;
@@ -202,16 +202,16 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 		Menu1.add(closem);
 
 		// イベントリスクの設定
-		closem.addActionListener(new ActionAdapter(){
-			public void actionPerformed(ActionEvent e){
+		closem.addActionListener(new ActionAdapter() {
+			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
 	}
 
-	 abstract class ActionAdapter implements ActionListener {
-		    public abstract void actionPerformed(ActionEvent ev);
-		  }
+	abstract class ActionAdapter implements ActionListener {
+		public abstract void actionPerformed(ActionEvent ev);
+	}
 
 	/**
 	 * インスタンスのリストをアップデート
@@ -257,9 +257,9 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 				return;
 			}
 		} else {
+			System.out.println("コンストラクタを実行して、インスタンスを作成してください");
 			// 配列ではない時
 			try {
-				// TODO コンストラクタを実行してくださいというDialog
 				createdMembers.setSelectedClass(null);
 				constructerPanel.updateList(Class.forName(classString));
 				constructerPanel.setEnabled(true);
@@ -307,18 +307,33 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 	private void updateConstructorPanel() {
 		Integer inputANC = inputArrayNumberChoice.getSelectedIndex();
 		Object selectedObj = createdMembers.getSelectedClass();
+		createdMembers.setSelectedArrayNumber(inputArrayNumberChoice
+				.getSelectedIndex());
 		if (Array.get(selectedObj, inputANC) == null) {
-			createdMembers.setSelectedArrayNumber(inputArrayNumberChoice
-					.getSelectedIndex());
 			System.out.println((createdMembers.getSelectedClass().getClass()));
 			constructerPanel.updateList(createdMembers.getSelectedClass()
 					.getClass().getComponentType());
 			updateMethodAndFieldPanel(false);
+			System.out.println("コンストラクタを実行して、" + instanceList.getSelectedItem()
+					+ "の" + inputANC + "番目に要素を入れてください");
 			constructerPanel.setEnabled(true);
 		} else {
+			System.out.println((createdMembers.getSelectedClass().getClass()));
 			updateMethodAndFieldPanel(true);
 			constructerPanel.setEnabled(false);
 		}
+	}
+
+	void setEnableConstructor(boolean b) {
+		constructerPanel.setEnabled(b);
+	}
+
+	void updateAllPanel() {
+		Class<?> cls = createdMembers.getSelectedClass().getClass();
+		methodPanel.updateList(cls);
+		fieldPanel.updateList(cls);
+		constructerPanel.updateList(cls);
+		refreshInstanceList();
 	}
 
 	void updateMethodAndFieldPanel(boolean b) {
@@ -336,6 +351,7 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if (e.getItemSelectable() == arrayCheckbox) {
+			constructerPanel.setEnabled(false);
 			arrayNumberTextField.setEnabled(arrayCheckbox.getState());
 			arrayNumberLabel.setEnabled(arrayCheckbox.getState());
 		} else if (e.getItemSelectable() == instanceList) {
