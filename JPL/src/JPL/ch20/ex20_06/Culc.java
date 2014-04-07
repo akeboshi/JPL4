@@ -21,8 +21,7 @@ class Culc {
 
 		String key;
 		String op;
-		int type;
-			while ((type = in.nextToken()) != StreamTokenizer.TT_EOF) {
+			while (in.nextToken() != StreamTokenizer.TT_EOF) {
  				if (in.sval.equals("foo") ||in.sval.equals("bar")|| in.sval.equals("hoge")){
 					key = in.sval;
 				} else {
@@ -41,8 +40,7 @@ class Culc {
 				}
 
 				in.parseNumbers();
-				type = in.nextToken();
-				if (type != StreamTokenizer.TT_NUMBER) {
+				if (in.nextToken() != StreamTokenizer.TT_NUMBER) {
 					throw new IllegalArgumentException("valueは数値を指定してください");
 				}
 
