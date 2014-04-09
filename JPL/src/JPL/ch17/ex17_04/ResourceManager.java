@@ -69,6 +69,7 @@ public final class ResourceManager {
 	}
 
 	class RepaperThread extends Thread {
+		boolean flag = false;
 		public void run() {
 			while (true) {
 				try {
@@ -80,8 +81,11 @@ public final class ResourceManager {
 					}
 					res.release();
 					ref.clear();
+					if(flag && queue.poll() == null){
+						break;
+					}
 				} catch (InterruptedException e) {
-					break; //すべて終了
+					flag = true;
 				}
 			}
 		}

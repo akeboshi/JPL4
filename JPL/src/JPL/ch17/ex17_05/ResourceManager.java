@@ -3,6 +3,7 @@ package JPL.ch17.ex17_05;
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public final class ResourceManager {
 	public synchronized void shutdown() {
 		if (!shutdown) {
 			shutdown = true;
+			System.gc();
 		}
 	}
 
@@ -35,11 +37,11 @@ public final class ResourceManager {
 	}
 
 	private static class ResourceImpl implements Resource {
-		Object okey;
+		WeakReference<Object> okey;
 		boolean needsRelease = false;
 
 		ResourceImpl(Object key) {
-			this.okey = key;
+			this.okey = new WeakReference<Object>(key);
 
 			// 外部リソースの設定
 
