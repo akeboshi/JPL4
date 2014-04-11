@@ -25,8 +25,10 @@ class ConstructorDialog extends MembersDialog {
 						+ ": " + newObject.getClass().getCanonicalName(),
 						newObject);
 			}
+		} catch (InvocationTargetException e) {
+			e.getCause().printStackTrace();
 		} catch (InstantiationException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException e) {
+				| IllegalArgumentException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
