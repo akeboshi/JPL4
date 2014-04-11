@@ -372,7 +372,7 @@ public class Interpret extends Frame implements ActionListener, KeyListener,
 			} else {
 
 				updateMethodAndFieldPanel(true);
-
+				constructerPanel.setEnabled(false);
 				inputArrayNumberChoice.setEnabled(false);
 				inputArrayNumberLabel.setEnabled(false);
 			}
