@@ -38,8 +38,10 @@ class MethodDialog extends MembersDialog {
 			Object returnObj = null;
 			try {
 				returnObj = method.invoke(selectedObj, paramObjs);
+			} catch (InvocationTargetException e) {
+				e.getCause().printStackTrace();
 			} catch (IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
+					 e) {
 				e.printStackTrace();
 			}
 			System.out.println(method.getName() + " " + "return "
