@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class LineFilterReader extends FilterReader {
 
-	protected LineFilterReader(Reader in) {
+	public LineFilterReader(Reader in) {
 		super(in);
 	}
 
@@ -17,6 +17,7 @@ public class LineFilterReader extends FilterReader {
 		while ((i = read()) != -1 && i != '\n') {
 			list.add(i);
 		}
+		if(i == -1) return null;
 		int[] ret = new int[list.size()];
 		for(int ii = 0 ; ii < list.size() ; ii++)
 			ret[ii] = list.get(ii);
