@@ -138,10 +138,10 @@ public class ArrayBunchList<E> extends AbstractList<E> {
 				throw new NoSuchElementException();
 			flag = false;
 
-			pos --;
-			while (pos < 0){
+			pos -= 1;
+			while (pos < 0) {
 				off -= arrays[--array].length;
-				pos = arrays[array].length -1;
+				pos = arrays[array].length - 1;
 				if (array < 0)
 					break;
 			}
@@ -160,7 +160,7 @@ public class ArrayBunchList<E> extends AbstractList<E> {
 
 		@Override
 		public void set(E e) {
-			if(flag)
+			if (flag)
 				throw new IllegalStateException();
 			arrays[array][pos] = e;
 		}
