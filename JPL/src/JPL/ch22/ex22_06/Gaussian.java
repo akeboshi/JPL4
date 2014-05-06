@@ -11,7 +11,7 @@ public class Gaussian {
 	public static void main(String[] args) {
 		Random r = new Random();
 		Map<Integer, Integer> map = new TreeMap<>();
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < NUM; i++) {
 			int num = (int) (r.nextGaussian()*3);
 			if (map.get(num) == null)
 				map.put(num, 1);
