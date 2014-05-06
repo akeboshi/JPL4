@@ -14,6 +14,7 @@ public class EnumerationImpl implements Enumeration<InputStream> {
 		this.fileList = fileList;
 	}
 
+	@Override
 	public boolean hasMoreElements() {
 		if (count < fileList.length) {
 			return true;
@@ -21,7 +22,7 @@ public class EnumerationImpl implements Enumeration<InputStream> {
 			return false;
 		}
 	}
-
+	@Override
 	public InputStream nextElement() {
 		InputStream in = null;
 		if (!hasMoreElements()) {
