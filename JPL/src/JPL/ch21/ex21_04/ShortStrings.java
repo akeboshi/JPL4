@@ -4,10 +4,10 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class ShortStrings implements Iterator<String> {
-	private Iterator<String> strings;
-	private String nextShort;
-	private final int maxLen;
-	
+	protected Iterator<String> strings;
+	protected String nextShort;
+	protected final int maxLen;
+
 	public ShortStrings(Iterator<String> strings,int maxLen){
 		this.strings = strings;
 		this.nextShort=null;
