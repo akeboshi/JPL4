@@ -2,7 +2,6 @@ package JPL.ch21.ex21_01;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
@@ -11,7 +10,7 @@ public class SotrListTest {
 
 	@Test
 	public void test() {
-		String path = new File("").getAbsolutePath();
+		String path = System.getProperty("user.dir");
 			List<String> list =new SotrList(path + "/src/JPL/ch21/ex21_01/test.txt").readFile();
 			for(String s : list)
 				System.out.println(s);
