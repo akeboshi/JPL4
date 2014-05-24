@@ -29,7 +29,7 @@ class SuggestMethodPanel extends SuggestPanel {
 				methodClass = methodClass.getComponentType();
 				selectedObj = Array.get(selectedObj, createdMembers.getSelectedArrayNumber());
 			}
-			while (methodClass != Object.class) {
+			while (methodClass != null) {
 				for (Method method : methodClass.getDeclaredMethods()) {
 					String methodName = "";
 					methodName += method.getReturnType().getCanonicalName()

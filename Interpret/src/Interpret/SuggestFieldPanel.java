@@ -28,7 +28,7 @@ class SuggestFieldPanel extends SuggestPanel {
 					cls = cls.getComponentType();
 					selectedObj = Array.get(selectedObj, createdMembers.getSelectedArrayNumber());
 				}
-				while (cls != Object.class) {
+				while (cls != null) {
 					for (Field f : cls.getDeclaredFields()) {
 						String fieldName;
 						boolean accessFlag = f.isAccessible();
