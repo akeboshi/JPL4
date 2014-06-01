@@ -2,7 +2,6 @@ package GUI.ex02_02;
 
 import java.awt.Choice;
 import java.awt.Color;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -18,13 +17,12 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-class PropetyDialog extends Dialog implements ActionListener,ItemListener ,DocumentListener,AdjustmentListener{
+class PropetyDialog extends JDialog implements ActionListener,ItemListener,AdjustmentListener{
 	/**
 	 *
 	 */
@@ -78,43 +76,13 @@ class PropetyDialog extends Dialog implements ActionListener,ItemListener ,Docum
 		panel2.add(backButton);
 		backButton.addActionListener(this);
 
-		// panel12.add(panel1);
-		// panel12.add(panel2);
-		// panel34.add(panel3);
-		// panel34.add(panel4);
-		//
-		// panel1.add(new Label("font color"));
-		//
-		// panel2.add(new Label("R"));
-		// panel2.add(textRed);
-		//
-		// panel2.add(new Label("G"));
-		// panel2.add(textGreen);
-		//
-		// panel2.add(new Label("B"));
-		// panel2.add(textBlue);
-		//
-		// panel3.add(new Label("back color"));
-		//
-		// panel4.add(new Label("R"));
-		// panel4.add(backTextRed);
-		//
-		// panel4.add(new Label("G"));
-		// panel4.add(backTextGreen);
-		//
-		// panel4.add(new Label("B"));
-		// panel4.add(backTextBlue);
-
 		panel6.add(new Label("font"));
 		fontChoice.addItem("Normal");
 		fontChoice.addItem("Binary");
 		panel6.add(fontChoice);
 		fontChoice.addItemListener(this);
 
-//		panel7.add(new Label("font sizse"));
-//		panel7.add(clockFontSize);
-//		clockFontSize.getDocument().addDocumentListener(this);
-
+		panel7.add(new Label("size"));
 		panel7.add(bar);
 		bar.setPreferredSize(new Dimension(150, 17));
 		bar.addAdjustmentListener(this);
@@ -129,35 +97,17 @@ class PropetyDialog extends Dialog implements ActionListener,ItemListener ,Docum
 				setVisible(false);
 			}
 		});
-		this.repaint();
 
 	}
 
 	public void viewProperty() {
 		setVisible(true);
-		repaint();
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "ok") {
-//			if (textRed == null || textRed.getText().equals(""))
-//				textRed.setText("0");
-//			if (textGreen == null || textGreen.getText().equals(""))
-//				textGreen.setText("0");
-//			if (textBlue == null || textBlue.getText().equals(""))
-//				textBlue.setText("0");
-//			if (backTextRed == null || backTextRed.getText().equals(""))
-//				backTextRed.setText("255");
-//			if (backTextGreen == null || backTextGreen.getText().equals(""))
-//				backTextGreen.setText("255");
-//			if (backTextBlue == null || backTextBlue.getText().equals(""))
-//				backTextBlue.setText("255");
-//			if (clockFontSize == null || clockFontSize.getText().equals(""))
-//				clockFontSize.setText("1");
-//			ClockMain.fontSize = 1 / Double
-//					.parseDouble(clockFontSize.getText());
-//			ClockMain.repaint();
 			setVisible(false);
 		} else if (e.getActionCommand() == "FontColor") {
 			ClockMain.fontColor = JColorChooser.showDialog(this, "色の選択",
@@ -177,25 +127,6 @@ class PropetyDialog extends Dialog implements ActionListener,ItemListener ,Docum
 		if (e.getSource() == fontChoice){
 			ClockMain.fontStyle = fontChoice.getSelectedItem();
 		}
-
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent paramDocumentEvent) {
-		ClockMain.fontSize = 1 / Double
-				.parseDouble(clockFontSize.getText());
-
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent paramDocumentEvent) {
-
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		ClockMain.fontSize = 1 / Double
-				.parseDouble(clockFontSize.getText());
 
 	}
 
