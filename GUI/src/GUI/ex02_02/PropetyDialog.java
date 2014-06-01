@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
@@ -17,11 +19,12 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-class PropetyDialog extends Dialog implements ActionListener,ItemListener ,DocumentListener{
+class PropetyDialog extends Dialog implements ActionListener,ItemListener ,DocumentListener,AdjustmentListener{
 	/**
 	 *
 	 */
@@ -52,6 +55,7 @@ class PropetyDialog extends Dialog implements ActionListener,ItemListener ,Docum
 	Choice fontChoice = new Choice();
 	String fontChoiceString = "Normal";
 	ex02_02 ClockMain;
+	JScrollBar bar= new JScrollBar(JScrollBar.HORIZONTAL, 100, 1, 10, 200);
 
 	public PropetyDialog(ex02_02 ClockMain) {
 		super(new Frame());
@@ -107,9 +111,13 @@ class PropetyDialog extends Dialog implements ActionListener,ItemListener ,Docum
 		panel6.add(fontChoice);
 		fontChoice.addItemListener(this);
 
-		panel7.add(new Label("font sizse"));
-		panel7.add(clockFontSize);
-		clockFontSize.getDocument().addDocumentListener(this);
+//		panel7.add(new Label("font sizse"));
+//		panel7.add(clockFontSize);
+//		clockFontSize.getDocument().addDocumentListener(this);
+
+		panel7.add(bar);
+		bar.setPreferredSize(new Dimension(150, 17));
+		bar.addAdjustmentListener(this);
 
 		JButton okButton = new JButton("ok");
 		panel5.add(okButton);
@@ -126,30 +134,31 @@ class PropetyDialog extends Dialog implements ActionListener,ItemListener ,Docum
 	}
 
 	public void viewProperty() {
-
 		setVisible(true);
+		repaint();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "ok") {
-			if (textRed == null || textRed.getText().equals(""))
-				textRed.setText("0");
-			if (textGreen == null || textGreen.getText().equals(""))
-				textGreen.setText("0");
-			if (textBlue == null || textBlue.getText().equals(""))
-				textBlue.setText("0");
-			if (backTextRed == null || backTextRed.getText().equals(""))
-				backTextRed.setText("255");
-			if (backTextGreen == null || backTextGreen.getText().equals(""))
-				backTextGreen.setText("255");
-			if (backTextBlue == null || backTextBlue.getText().equals(""))
-				backTextBlue.setText("255");
-			if (clockFontSize == null || clockFontSize.getText().equals(""))
-				clockFontSize.setText("1");
-			ClockMain.fontSize = 1 / Double
-					.parseDouble(clockFontSize.getText());
-			ClockMain.repaint();
+//			if (textRed == null || textRed.getText().equals(""))
+//				textRed.setText("0");
+//			if (textGreen == null || textGreen.getText().equals(""))
+//				textGreen.setText("0");
+//			if (textBlue == null || textBlue.getText().equals(""))
+//				textBlue.setText("0");
+//			if (backTextRed == null || backTextRed.getText().equals(""))
+//				backTextRed.setText("255");
+//			if (backTextGreen == null || backTextGreen.getText().equals(""))
+//				backTextGreen.setText("255");
+//			if (backTextBlue == null || backTextBlue.getText().equals(""))
+//				backTextBlue.setText("255");
+//			if (clockFontSize == null || clockFontSize.getText().equals(""))
+//				clockFontSize.setText("1");
+//			ClockMain.fontSize = 1 / Double
+//					.parseDouble(clockFontSize.getText());
+//			ClockMain.repaint();
+			setVisible(false);
 		} else if (e.getActionCommand() == "FontColor") {
 			ClockMain.fontColor = JColorChooser.showDialog(this, "色の選択",
 					ClockMain.fontColor);
@@ -188,5 +197,10 @@ class PropetyDialog extends Dialog implements ActionListener,ItemListener ,Docum
 		ClockMain.fontSize = 1 / Double
 				.parseDouble(clockFontSize.getText());
 
+	}
+
+	@Override
+	public void adjustmentValueChanged(AdjustmentEvent paramAdjustmentEvent) {
+		ClockMain.fontSize = 1 / (bar.getValue()/100.0);
 	}
 }
