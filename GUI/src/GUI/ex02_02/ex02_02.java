@@ -2,35 +2,24 @@ package GUI.ex02_02;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Menu;
-import java.awt.MenuBar;
-import java.awt.MenuItem;
 import java.awt.Point;
-import java.awt.PopupMenu;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JWindow;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 public class ex02_02 extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private PropetyDialog propertyDialog;
 	private double resize = 1.0;
-	private PopupMenu pop = new PopupMenu("popup");
+	private JPopupMenu pop = new JPopupMenu("popup");
 	private Point startDrag, startPos;
 	public String fontStyle = "Normal";
 	public double fontSize = 1;
@@ -44,27 +33,25 @@ public class ex02_02 extends JFrame implements ActionListener {
 	}
 
 	public ex02_02(String title) {
-		super();
+		PaintPanel frame = new PaintPanel(this);
 		propertyDialog = new PropetyDialog(this);
 		generateMenu();
 		generatePopUp();
 		addMouseListener(new MouseIventer(this));
 		addMouseMotionListener(new MouseIventer(this));
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent close) {
-				System.exit(0);
-			}
-		});
-		this.setSize(660,360+50);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		this.setSize(660, 360 + 50);
 		this.setVisible(true);
-		this.startClock(this);
+		this.getContentPane().add(frame);
+		startClock(frame);
 	}
 
-	public void startClock(ex02_02 clock) {
+	public void startClock(PaintPanel frame) {
 		while (true) {
 			try {
 				Thread.sleep(1);
-				clock.repaint();
+				frame.repaint();
 			} catch (InterruptedException e) {
 				System.out.println("error" + e);
 			}
@@ -73,30 +60,29 @@ public class ex02_02 extends JFrame implements ActionListener {
 
 	public void generatePopUp() {
 
-		MenuItem newm = new MenuItem("プロパティ");
-		MenuItem closem = new MenuItem("閉じる");
-		Menu fontStyleMenu = new Menu("FontStyle");
-		Menu fontSizeMenu = new Menu("FontSize");
-		Menu fontColorMenu = new Menu("FontColor");
-		Menu backColorMenu = new Menu("backColor");
+		JMenuItem newm = new JMenuItem("プロパティ");
+		JMenuItem closem = new JMenuItem("閉じる");
+		JMenu fontStyleMenu = new JMenu("FontStyle");
+		JMenu fontSizeMenu = new JMenu("FontSize");
+		JMenu fontColorMenu = new JMenu("FontColor");
+		JMenu backColorMenu = new JMenu("backColor");
 
 		ChangeFontStyle changeFont = new ChangeFontStyle(this);
 
-		MenuItem binaryFont = new MenuItem("Binary");
+		JMenuItem binaryFont = new JMenuItem("Binary");
 		binaryFont.addActionListener(changeFont);
 		fontStyleMenu.add(binaryFont);
 
-		MenuItem normalFont = new MenuItem("Normal");
+		JMenuItem normalFont = new JMenuItem("Normal");
 		normalFont.addActionListener(changeFont);
 		fontStyleMenu.add(normalFont);
 
-
 		ChangeFontSize changeSize = new ChangeFontSize(this);
 
-		MenuItem fontSize1 = new MenuItem("0.5");
-		MenuItem fontSize2 = new MenuItem("1.0");
-		MenuItem fontSize3 = new MenuItem("1.5");
-		MenuItem fontSize4 = new MenuItem("2.0");
+		JMenuItem fontSize1 = new JMenuItem("0.5");
+		JMenuItem fontSize2 = new JMenuItem("1.0");
+		JMenuItem fontSize3 = new JMenuItem("1.5");
+		JMenuItem fontSize4 = new JMenuItem("2.0");
 
 		fontSize1.addActionListener(changeSize);
 		fontSize2.addActionListener(changeSize);
@@ -110,10 +96,10 @@ public class ex02_02 extends JFrame implements ActionListener {
 
 		ChangeFontColor changeFontColor = new ChangeFontColor(this);
 
-		MenuItem fontColor1 = new MenuItem("Red");
-		MenuItem fontColor2 = new MenuItem("Green");
-		MenuItem fontColor3 = new MenuItem("Pink");
-		MenuItem fontColor4 = new MenuItem("Yellow");
+		JMenuItem fontColor1 = new JMenuItem("Red");
+		JMenuItem fontColor2 = new JMenuItem("Green");
+		JMenuItem fontColor3 = new JMenuItem("Pink");
+		JMenuItem fontColor4 = new JMenuItem("Yellow");
 
 		fontColor1.addActionListener(changeFontColor);
 		fontColor2.addActionListener(changeFontColor);
@@ -127,10 +113,10 @@ public class ex02_02 extends JFrame implements ActionListener {
 
 		ChangeBackColor changeBackColor = new ChangeBackColor(this);
 
-		MenuItem backColor1 = new MenuItem("White");
-		MenuItem backColor2 = new MenuItem("Blue");
-		MenuItem backColor3 = new MenuItem("DarkGray");
-		MenuItem backColor4 = new MenuItem("LightGray");
+		JMenuItem backColor1 = new JMenuItem("White");
+		JMenuItem backColor2 = new JMenuItem("Blue");
+		JMenuItem backColor3 = new JMenuItem("DarkGray");
+		JMenuItem backColor4 = new JMenuItem("LightGray");
 
 		backColor1.addActionListener(changeBackColor);
 		backColor2.addActionListener(changeBackColor);
@@ -152,12 +138,12 @@ public class ex02_02 extends JFrame implements ActionListener {
 		// イベントリスクの設定
 		newm.addActionListener(this);
 		closem.addActionListener(this);
-		add(pop);
+		getRootPane().add(pop);
 	}
 
 	public void generateMenu() {
 		JMenuBar menubar = new JMenuBar();
-		setJMenuBar(menubar);
+		getRootPane().setJMenuBar(menubar);
 		JMenu Menu1 = new JMenu("ファイル");
 		menubar.add(Menu1);
 
@@ -171,29 +157,9 @@ public class ex02_02 extends JFrame implements ActionListener {
 		// イベントリスクの設定
 		newm.addActionListener(this);
 		closem.addActionListener(this);
-		
+
 	}
 
-	public void update(Graphics g) {
-		paint(g);
-	}
-
-	public void paint(Graphics g) {
-		resize = fontSize;
-		this.setSize((int) (660 / resize), (int) (360 / resize) + 50);
-
-		Dimension size = getSize();
-		Image back = createImage(size.width, size.height);
-
-		Graphics buffer = back.getGraphics();
-
-		buffer.setColor(backColor);
-		buffer.fillRect(0, 0, (int) (660 / resize) + 1,
-				(int) (360 / resize) + 50 + 1);
-		WatchPainter watchPainter = WatchePainterFactory.factory(buffer, fontStyle, fontColor, backColor, fontSize);
-		watchPainter.paintTime();
-		g.drawImage(back, 0, 0, this);
-	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "プロパティ") {
@@ -203,7 +169,33 @@ public class ex02_02 extends JFrame implements ActionListener {
 		}
 	}
 
-	public PopupMenu getPopup(){
+	class PaintPanel extends JPanel {
+		ex02_02 ex02_02;
+		public PaintPanel(ex02_02 ex02_02) {
+			this.ex02_02 = ex02_02;
+		}
+
+		public void paintComponent(Graphics g) {
+			this.setSize((int) (660 / fontSize), (int) (360 / fontSize) + 50);
+
+			Dimension size = getSize();
+			Image back = createImage(size.width, size.height);
+
+			ex02_02.setSize(size);
+
+			Graphics buffer = back.getGraphics();
+
+			buffer.setColor(backColor);
+			buffer.fillRect(0, 0, (int) (660 / fontSize) + 1,
+					(int) (360 / fontSize) + 1);
+			WatchPainter watchPainter = WatchePainterFactory.factory(buffer,
+					fontStyle, fontColor, backColor, fontSize);
+			watchPainter.paintTime();
+			g.drawImage(back, 0, 0, this);
+		}
+	}
+
+	public JPopupMenu getPopup() {
 		return pop;
 	}
 }

@@ -59,31 +59,31 @@ class NormalWatchPainter extends WatchPainter {
 			int bottomRight) {
 		if (topLeft > 0)
 			g.fillRect((int) ((30 + x) / getFontSize()),
-					(int) (50 / getFontSize()) + 50,
+					(int) (50 / getFontSize()) ,
 					(int) (20 / getFontSize()), (int) (150 / getFontSize()));
 		if (topCenter > 0)
 			g.fillRect((int) ((30 + x) / getFontSize()),
-					(int) (50 / getFontSize()) + 50,
+					(int) (50 / getFontSize()) ,
 					(int) (80 / getFontSize()), (int) (20 / getFontSize()));
 		if (topRight > 0)
 			g.fillRect((int) ((90 + x) / getFontSize()),
-					(int) (50 / getFontSize()) + 50,
+					(int) (50 / getFontSize()) ,
 					(int) (20 / getFontSize()), (int) (150 / getFontSize()));
 		if (centerCenter > 0)
 			g.fillRect((int) ((30 + x) / getFontSize()),
-					(int) (180 / getFontSize()) + 50,
+					(int) (180 / getFontSize()) ,
 					(int) (80 / getFontSize()), (int) (20 / getFontSize()));
 		if (bottomLeft > 0)
 			g.fillRect((int) ((30 + x) / getFontSize()),
-					(int) (180 / getFontSize()) + 50,
+					(int) (180 / getFontSize()) ,
 					(int) (20 / getFontSize()), (int) (150 / getFontSize()));
 		if (bottomCenter > 0)
 			g.fillRect((int) ((30 + x) / getFontSize()),
-					(int) (310 / getFontSize()) + 50,
+					(int) (310 / getFontSize()) ,
 					(int) (80 / getFontSize()), (int) (20 / getFontSize()));
 		if (bottomRight > 0)
 			g.fillRect((int) ((90 + x) / getFontSize()),
-					(int) (180 / getFontSize()) + 50,
+					(int) (180 / getFontSize()) ,
 					(int) (20 / getFontSize()), (int) (150 / getFontSize()));
 	}
 }

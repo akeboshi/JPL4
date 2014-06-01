@@ -5,16 +5,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import javax.swing.JFrame;
-import javax.swing.JWindow;
-
 class MouseIventer implements MouseListener,
 MouseMotionListener {
 	private Point startDrag, startPos;
-	private JFrame frame;
+	private ex02_02 frame;
 
-	public MouseIventer(JFrame frame){
-		this.frame = frame;
+	public MouseIventer(ex02_02 ex02_02){
+		this.frame = ex02_02;
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -40,13 +37,13 @@ MouseMotionListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {// TODO
-																// 自動生成されたメソッド・スタブif
-																// ((e.getModifiers()
-																// &
-																// MouseEvent.BUTTON1_MASK)
-																// != 0) {
-			startDrag = getScreenLocation(e);
-			startPos = frame.getLocation();
+//																// 自動生成されたメソッド・スタブif
+//																// ((e.getModifiers()
+//																// &
+//																// MouseEvent.BUTTON1_MASK)
+//																// != 0) {
+//			startDrag =getScreenLocation(e);
+//			startPos = frame.getContentPane().getLocation();
 		}
 		if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0) {
 			// 中央
@@ -79,10 +76,11 @@ MouseMotionListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-			Point cursor = getScreenLocation(e);
-			int xdiff = cursor.x - startDrag.x;
-			int ydiff = cursor.y - startDrag.y;
-			frame.setLocation(startPos.x + xdiff, startPos.y + ydiff);
+//			Point cursor = getScreenLocation(e);
+//			System.out.println(startDrag);
+//			int xdiff = cursor.x - startDrag.x;
+//			int ydiff = cursor.y - startDrag.y;
+//			frame.setLocation(startPos.x + xdiff, startPos.y + ydiff);
 		}
 		if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0) {
 			// 中央
