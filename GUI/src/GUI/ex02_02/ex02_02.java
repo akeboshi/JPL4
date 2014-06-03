@@ -34,24 +34,26 @@ public class ex02_02 extends JFrame implements ActionListener {
 
 	public ex02_02(String title) {
 		PaintPanel frame = new PaintPanel(this);
+		this.getContentPane().add(frame);
+		frame.setVisible(true);
+		
 		propertyDialog = new PropetyDialog(this);
-		generateMenu();
-		generatePopUp();
 		addMouseListener(new MouseIventer(this));
 		addMouseMotionListener(new MouseIventer(this));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		this.setSize(660, 360 + 50);
+		generateMenu();
+		generatePopUp();
 		this.setVisible(true);
-		this.getContentPane().add(frame);
-		startClock(frame);
+		this.setSize(660, 360 + 50);
+
+		startClock();
 	}
 
-	public void startClock(PaintPanel frame) {
+	public void startClock() {
 		while (true) {
 			try {
 				Thread.sleep(1);
-				frame.repaint();
+				this.repaint();
 			} catch (InterruptedException e) {
 				System.out.println("error" + e);
 			}
@@ -171,27 +173,28 @@ public class ex02_02 extends JFrame implements ActionListener {
 
 	class PaintPanel extends JPanel {
 		ex02_02 ex02_02;
+
 		public PaintPanel(ex02_02 ex02_02) {
 			this.ex02_02 = ex02_02;
 		}
 
 		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
 			this.setSize((int) (660 / fontSize), (int) (360 / fontSize) + 50);
 
 			Dimension size = getSize();
-			Image back = createImage(size.width, size.height);
+//			Image back = createImage(size.width, size.height);
 
 			ex02_02.setSize(size);
 
-			Graphics buffer = back.getGraphics();
-
-			buffer.setColor(backColor);
-			buffer.fillRect(0, 0, (int) (660 / fontSize) + 1,
-					(int) (360 / fontSize) + 1);
-			WatchPainter watchPainter = WatchePainterFactory.factory(buffer,
+//			Graphics buffer = back.getGraphics();
+//
+			g.setColor(backColor);
+			g.fillRect(0, 0, size.width,size.height);
+			WatchPainter watchPainter = WatchePainterFactory.factory(g,
 					fontStyle, fontColor, backColor, fontSize);
 			watchPainter.paintTime();
-			g.drawImage(back, 0, 0, this);
+//			g.drawImage(back, 0, 0, this);
 		}
 	}
 

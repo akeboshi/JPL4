@@ -18,6 +18,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
@@ -76,13 +77,13 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 		panel2.add(backButton);
 		backButton.addActionListener(this);
 
-		panel6.add(new Label("font"));
+		panel6.add(new JLabel("font style"));
 		fontChoice.addItem("Normal");
 		fontChoice.addItem("Binary");
 		panel6.add(fontChoice);
 		fontChoice.addItemListener(this);
 
-		panel7.add(new Label("size"));
+		panel7.add(new JLabel("size"));
 		panel7.add(bar);
 		bar.setPreferredSize(new Dimension(150, 17));
 		bar.addAdjustmentListener(this);
@@ -101,6 +102,9 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 	}
 
 	public void viewProperty() {
+		System.out.println(ClockMain.fontSize);
+		bar.setValue((int)(100.0/ClockMain.fontSize));
+		System.out.println(bar.getValue());
 		setVisible(true);
 
 	}
