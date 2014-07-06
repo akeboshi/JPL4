@@ -2,14 +2,11 @@ package GUI.ex02_03;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -27,6 +24,7 @@ public class ex02_03 extends JWindow implements ActionListener {
 	public double fontSize = 1;
 	public Color fontColor = new Color(0xff0000);
 	public Color backColor = new Color(0xffffff);
+	private MouseIventer mv;
 
 	public static void main(String args[]) {
 
@@ -38,10 +36,11 @@ public class ex02_03 extends JWindow implements ActionListener {
 		PaintPanel frame = new PaintPanel(this);
 		this.add(frame);
 		frame.setVisible(true);
-		
+
 		propertyDialog = new PropetyDialog(this);
-		addMouseListener(new MouseIventer(this));
-		addMouseMotionListener(new MouseIventer(this));
+		mv = new MouseIventer(this);
+		addMouseListener(mv);
+		addMouseMotionListener(mv);
 		generateMenu();
 		generatePopUp();
 		this.setVisible(true);
@@ -124,7 +123,7 @@ public class ex02_03 extends JWindow implements ActionListener {
 		backColor3.setBackground(Color.DARK_GRAY);
 		JMenuItem backColor4 = new JMenuItem("LightGray");
 		backColor4.setBackground(Color.LIGHT_GRAY);
-		
+
 		backColor1.addActionListener(changeBackColor);
 		backColor2.addActionListener(changeBackColor);
 		backColor3.addActionListener(changeBackColor);
