@@ -6,9 +6,9 @@ import java.awt.event.ActionListener;
 
 class ChangeFontStyle implements ActionListener {
 
-	private ex02_02 tokei;
+	private ex02_03 tokei;
 
-	public ChangeFontStyle(ex02_02 ex) {
+	public ChangeFontStyle(ex02_03 ex) {
 		this.tokei = ex;
 	}
 

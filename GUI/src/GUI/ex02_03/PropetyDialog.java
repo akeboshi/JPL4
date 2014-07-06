@@ -53,10 +53,10 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 	double clockFontSizeDouble = 1;
 	Choice fontChoice = new Choice();
 	String fontChoiceString = "Normal";
-	ex02_02 ClockMain;
+	ex02_03 ClockMain;
 	JScrollBar bar= new JScrollBar(JScrollBar.HORIZONTAL, 100, 1, 10, 200);
 
-	public PropetyDialog(ex02_02 ClockMain) {
+	public PropetyDialog(ex02_03 ClockMain) {
 		super(new Frame());
 		this.ClockMain = ClockMain;
 		setSize(400, 200);
@@ -69,20 +69,24 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 		add(panel7);
 		add(panel5);
 
+		// フォントカラー表示
 		JButton fontButton = new JButton("FontColor");
 		panel1.add(fontButton);
 		fontButton.addActionListener(this);
 
+		// バックグラウンドカラー
 		JButton backButton = new JButton("BackgroundColor");
 		panel2.add(backButton);
 		backButton.addActionListener(this);
 
+		// フォントスタイル
 		panel6.add(new JLabel("font style"));
 		fontChoice.addItem("Normal");
 		fontChoice.addItem("Binary");
 		panel6.add(fontChoice);
 		fontChoice.addItemListener(this);
 
+		// フォントサイズ
 		panel7.add(new JLabel("size"));
 		panel7.add(bar);
 		bar.setPreferredSize(new Dimension(150, 17));

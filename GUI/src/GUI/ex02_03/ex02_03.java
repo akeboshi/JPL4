@@ -2,6 +2,7 @@ package GUI.ex02_03;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -14,8 +15,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JWindow;
 
-public class ex02_02 extends JFrame implements ActionListener {
+public class ex02_03 extends JWindow implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private PropetyDialog propertyDialog;
 	private double resize = 1.0;
@@ -28,19 +30,18 @@ public class ex02_02 extends JFrame implements ActionListener {
 
 	public static void main(String args[]) {
 
-		ex02_02 app = new ex02_02("");
+		ex02_03 app = new ex02_03("");
 
 	}
 
-	public ex02_02(String title) {
+	public ex02_03(String title) {
 		PaintPanel frame = new PaintPanel(this);
-		this.getContentPane().add(frame);
+		this.add(frame);
 		frame.setVisible(true);
 		
 		propertyDialog = new PropetyDialog(this);
 		addMouseListener(new MouseIventer(this));
 		addMouseMotionListener(new MouseIventer(this));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		generateMenu();
 		generatePopUp();
 		this.setVisible(true);
@@ -98,10 +99,10 @@ public class ex02_02 extends JFrame implements ActionListener {
 
 		ChangeFontColor changeFontColor = new ChangeFontColor(this);
 
-		JMenuItem fontColor1 = new JMenuItem("Red");
-		JMenuItem fontColor2 = new JMenuItem("Green");
-		JMenuItem fontColor3 = new JMenuItem("Pink");
-		JMenuItem fontColor4 = new JMenuItem("Yellow");
+		JMenuItem fontColor1 = new JMenuItem("<html><font color=red>■</font>Red</html>");
+		JMenuItem fontColor2 = new JMenuItem("<html><font color=green>■</font>Green</html>");
+		JMenuItem fontColor3 = new JMenuItem("<html><font color=pink>■</font>Pink</html>");
+		JMenuItem fontColor4 = new JMenuItem("<html><font color=yellow>■</font>Yellow</html>");
 
 		fontColor1.addActionListener(changeFontColor);
 		fontColor2.addActionListener(changeFontColor);
@@ -116,10 +117,14 @@ public class ex02_02 extends JFrame implements ActionListener {
 		ChangeBackColor changeBackColor = new ChangeBackColor(this);
 
 		JMenuItem backColor1 = new JMenuItem("White");
+		backColor1.setBackground(Color.WHITE);
 		JMenuItem backColor2 = new JMenuItem("Blue");
+		backColor2.setBackground(Color.BLUE);
 		JMenuItem backColor3 = new JMenuItem("DarkGray");
+		backColor3.setBackground(Color.DARK_GRAY);
 		JMenuItem backColor4 = new JMenuItem("LightGray");
-
+		backColor4.setBackground(Color.LIGHT_GRAY);
+		
 		backColor1.addActionListener(changeBackColor);
 		backColor2.addActionListener(changeBackColor);
 		backColor3.addActionListener(changeBackColor);
@@ -172,9 +177,10 @@ public class ex02_02 extends JFrame implements ActionListener {
 	}
 
 	class PaintPanel extends JPanel {
-		ex02_02 ex02_02;
+		private static final long serialVersionUID = 1L;
+		ex02_03 ex02_02;
 
-		public PaintPanel(ex02_02 ex02_02) {
+		public PaintPanel(ex02_03 ex02_02) {
 			this.ex02_02 = ex02_02;
 		}
 
