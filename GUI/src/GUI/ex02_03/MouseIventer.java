@@ -36,9 +36,14 @@ MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-			startDrag = getScreenLocation(e);
-			startPos = frame.getContentPane().getLocation();
+		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {// TODO
+//																// 自動生成されたメソッド・スタブif
+//																// ((e.getModifiers()
+//																// &
+//																// MouseEvent.BUTTON1_MASK)
+//																// != 0) {
+//			startDrag =getScreenLocation(e);
+//			startPos = frame.getContentPane().getLocation();
 		}
 		if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0) {
 			// 中央
@@ -71,10 +76,11 @@ MouseMotionListener {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-			Point cursor = getScreenLocation(e);
-			int xdiff = cursor.x - startDrag.x;
-			int ydiff = cursor.y - startDrag.y;
-			frame.setLocation(startPos.x + xdiff, startPos.y + ydiff);
+//			Point cursor = getScreenLocation(e);
+//			System.out.println(startDrag);
+//			int xdiff = cursor.x - startDrag.x;
+//			int ydiff = cursor.y - startDrag.y;
+//			frame.setLocation(startPos.x + xdiff, startPos.y + ydiff);
 		}
 		if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0) {
 			// 中央

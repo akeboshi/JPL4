@@ -13,13 +13,13 @@ class ChangeFontColor implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand() == "<html><font color=red>■</font>Red</html>") {
+		if (e.getActionCommand() == "Red") {
 			watch.fontColor = Color.RED;
-		} else if (e.getActionCommand() == "<html><font color=green>■</font>Green</html>") {
+		} else if (e.getActionCommand() == "Green") {
 			watch.fontColor = Color.GREEN;
-		} else if (e.getActionCommand() == "<html><font color=pink>■</font>Pink</html>") {
+		} else if (e.getActionCommand() == "Pink") {
 			watch.fontColor = Color.PINK;
-		} else if (e.getActionCommand() == "<html><font color=yellow>■</font>Yellow</html>") {
+		} else if (e.getActionCommand() == "Yellow") {
 			watch.fontColor = Color.YELLOW;
 		}
 	}
