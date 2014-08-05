@@ -68,7 +68,7 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 		setSize(400, 200);
 		setResizable(false);
 		setTitle("プロパティ");
-		
+
 		GridBagLayout layout = new GridBagLayout();
 		setLayout(layout);
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -76,18 +76,18 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 		Label fontLabel = new Label("font color");
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		layout.setConstraints(fontLabel, gbc);
 		add(fontLabel);
-		
+
 		// フォントカラー表示
 		JButton fontButton = new JButton("FontColor");
-		gbc.gridx = 1;
+		gbc.gridx = 100;
 		gbc.gridy = 0;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(fontButton, gbc);
 		add(fontButton);
@@ -97,17 +97,17 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 		Label backLabel = new Label("background color");
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		layout.setConstraints(backLabel, gbc);
 		add(backLabel);
-		
+
 		JButton backButton = new JButton("BackgroundColor");
-		gbc.gridx = 1;
+		gbc.gridx = 100;
 		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(backButton, gbc);
 		add(backButton);
@@ -116,19 +116,19 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 		// フォントスタイル
 		JLabel labelFontStyle = new JLabel("font style");
 		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
+		gbc.gridy = 2;
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		layout.setConstraints(labelFontStyle, gbc);
 		add(labelFontStyle);
-		
+
 		fontChoice.addItem("Normal");
 		fontChoice.addItem("Binary");
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
+		gbc.gridx = 100;
+		gbc.gridy = 2;
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(fontChoice, gbc);
 		add(fontChoice);
@@ -137,28 +137,31 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 		// フォントサイズ
 		JLabel labelFontSize = new JLabel("size");
 		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
+		gbc.gridy = 3;
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		layout.setConstraints(labelFontSize, gbc);
 		add(labelFontSize);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(bar, gbc);
-		add(bar);
-		bar.setPreferredSize(new Dimension(150, 17));
+
+		gbc.gridx = 100;
+		gbc.gridy = 3;
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
+		bar.setPreferredSize(new Dimension(150, 15));
+		setMinimumSize(bar.getPreferredSize());
+		panel1.add(bar);
+		layout.setConstraints(panel1, gbc);
+		panel1.setMinimumSize(new Dimension((int)bar.getPreferredSize().getWidth(),(int)bar.getPreferredSize().getHeight()+5));
+		add(panel1);
 		bar.addAdjustmentListener(this);
+
 
 		JButton okButton = new JButton("ok");
 		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
+		gbc.gridy = 4;
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.CENTER;
 		layout.setConstraints(okButton, gbc);
 		add(okButton);
@@ -166,16 +169,15 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 		okButton.addActionListener(this);
 
 		JButton cancelButton = new JButton("cancel");
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;	
-		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.gridx = 100;
+		gbc.gridy = 4;
+		gbc.gridwidth = 100;
+		gbc.gridheight = 1;
 		layout.setConstraints(cancelButton, gbc);
 		add(cancelButton);
 		cancelButton.setPreferredSize(new Dimension(200, 20));
 		cancelButton.addActionListener(this);
-		
+
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent close) {
 				setVisible(false);
@@ -191,7 +193,7 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 			saveFontSize = ClockMain.fontSize;
 			saveFontStyle = ClockMain.fontStyle;
 		}
-		
+
 		System.out.println(ClockMain.fontSize);
 		bar.setValue((int)(100.0/ClockMain.fontSize));
 		System.out.println(bar.getValue());

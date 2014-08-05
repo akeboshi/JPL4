@@ -40,12 +40,12 @@ public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
 		this.add(frame);
 		frame.setVisible(true);
 
-		this.setLocation(clockParam.getInt("cpx", 0), clockParam.getInt("cpx",0));
+		this.setLocation(clockParam.getInt("cpx", 0), clockParam.getInt("cpy",0));
 		fontColor = new Color(clockParam.getInt("fc", 0));
 		backColor = new Color(clockParam.getInt("bc", 0xffffff));
 		fontSize = clockParam.getDouble("fontSize", 1.0);
 		fontStyle = clockParam.get("fontStyle","Normal");
-		
+
 		propertyDialog = new PropetyDialog(this);
 		MouseIventer mi = new MouseIventer(this);
 		addMouseListener(mi);
@@ -181,13 +181,7 @@ public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
 		if (e.getActionCommand() == "プロパティ") {
 			propertyDialog.viewProperty();
 		} else if (e.getActionCommand() == "閉じる") {
-			clockParam.putInt("cpx", getLocation().x);
-			clockParam.putInt("cpy", getLocation().y);
-			clockParam.putInt("fc", fontColor.getRGB());
-			clockParam.putInt("bc", fontColor.getRGB());
-			clockParam.putDouble("fontSize", fontSize);
-			clockParam.put("fontStyle", fontStyle);
-			System.exit(0);
+			windowClosed(null);
 		}
 	}
 
@@ -226,13 +220,13 @@ public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -240,7 +234,7 @@ public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
 		clockParam.putInt("cpx", getLocation().x);
 		clockParam.putInt("cpy", getLocation().y);
 		clockParam.putInt("fc", fontColor.getRGB());
-		clockParam.putInt("bc", fontColor.getRGB());
+		clockParam.putInt("bc", backColor.getRGB());
 		clockParam.putDouble("fontSize", fontSize);
 		clockParam.put("fontStyle", fontStyle);
 		System.exit(0);
@@ -249,24 +243,24 @@ public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
 	@Override
 	public void windowIconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
