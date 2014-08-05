@@ -6,6 +6,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.prefs.Preferences;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -14,12 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 
-public class ex02_03 extends JWindow implements ActionListener {
+public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
 	private static final long serialVersionUID = 1L;
 	private PropetyDialog propertyDialog;
 	private double resize = 1.0;
 	private JPopupMenu pop = new JPopupMenu("popup");
 	private Point startDrag, startPos;
+	private Preferences clockParam = Preferences.userRoot().node("clockParam");
 	public String fontStyle = "Normal";
 	public double fontSize = 1;
 	public Color fontColor = new Color(0xff0000);
@@ -36,6 +40,12 @@ public class ex02_03 extends JWindow implements ActionListener {
 		this.add(frame);
 		frame.setVisible(true);
 
+		this.setLocation(clockParam.getInt("cpx", 0), clockParam.getInt("cpx",0));
+		fontColor = new Color(clockParam.getInt("fc", 0));
+		backColor = new Color(clockParam.getInt("bc", 0xffffff));
+		fontSize = clockParam.getDouble("fontSize", 1.0);
+		fontStyle = clockParam.get("fontStyle","Normal");
+		
 		propertyDialog = new PropetyDialog(this);
 		MouseIventer mi = new MouseIventer(this);
 		addMouseListener(mi);
@@ -171,6 +181,12 @@ public class ex02_03 extends JWindow implements ActionListener {
 		if (e.getActionCommand() == "プロパティ") {
 			propertyDialog.viewProperty();
 		} else if (e.getActionCommand() == "閉じる") {
+			clockParam.putInt("cpx", getLocation().x);
+			clockParam.putInt("cpy", getLocation().y);
+			clockParam.putInt("fc", fontColor.getRGB());
+			clockParam.putInt("bc", fontColor.getRGB());
+			clockParam.putDouble("fontSize", fontSize);
+			clockParam.put("fontStyle", fontStyle);
 			System.exit(0);
 		}
 	}
@@ -205,5 +221,52 @@ public class ex02_03 extends JWindow implements ActionListener {
 
 	public JPopupMenu getPopup() {
 		return pop;
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		clockParam.putInt("cpx", getLocation().x);
+		clockParam.putInt("cpy", getLocation().y);
+		clockParam.putInt("fc", fontColor.getRGB());
+		clockParam.putInt("bc", fontColor.getRGB());
+		clockParam.putDouble("fontSize", fontSize);
+		clockParam.put("fontStyle", fontStyle);
+		System.exit(0);
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
