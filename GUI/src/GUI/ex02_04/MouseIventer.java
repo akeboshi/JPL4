@@ -38,7 +38,7 @@ MouseMotionListener {
 	public void mousePressed(MouseEvent e) {
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 			startDrag =getScreenLocation(e);
-			startPos = frame.getContentPane().getLocation();
+			startPos = frame.getLocation();
 		}
 		if ((e.getModifiers() & MouseEvent.BUTTON2_MASK) != 0) {
 			// 中央
