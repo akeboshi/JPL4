@@ -6,9 +6,9 @@ import java.awt.event.ActionListener;
 
 class ChangeBackColor implements ActionListener {
 
-	private ex02_03 tokei;
+	private ex02_04 tokei;
 
-	public ChangeBackColor(ex02_03 ex) {
+	public ChangeBackColor(ex02_04 ex) {
 		this.tokei = ex;
 	}
 

@@ -5,9 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 class ChangeFontColor implements ActionListener {
-	private ex02_03 watch;
+	private ex02_04 watch;
 
-	public ChangeFontColor(ex02_03 ex) {
+	public ChangeFontColor(ex02_04 ex) {
 		this.watch = ex;
 	}
 

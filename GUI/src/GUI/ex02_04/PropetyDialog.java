@@ -55,14 +55,14 @@ class PropetyDialog extends JDialog implements ActionListener,ItemListener,Adjus
 	double clockFontSizeDouble = 1;
 	Choice fontChoice = new Choice();
 	String fontChoiceString = "Normal";
-	ex02_03 ClockMain;
+	ex02_04 ClockMain;
 	JScrollBar bar= new JScrollBar(JScrollBar.HORIZONTAL, 100, 1, 10, 200);
 	private Color saveBackColor;
 	private Color saveFontColor;
 	private String saveFontStyle;
 	private double saveFontSize;
 
-	public PropetyDialog(ex02_03 ClockMain) {
+	public PropetyDialog(ex02_04 ClockMain) {
 		super(new Frame());
 		this.ClockMain = ClockMain;
 		setSize(400, 200);

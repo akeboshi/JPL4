@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 
-public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
+public class ex02_04 extends JWindow implements ActionListener ,WindowListener{
 	private static final long serialVersionUID = 1L;
 	private PropetyDialog propertyDialog;
 	private double resize = 1.0;
@@ -31,11 +31,11 @@ public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
 
 	public static void main(String args[]) {
 
-		ex02_03 app = new ex02_03("");
+		ex02_04 app = new ex02_04("");
 
 	}
 
-	public ex02_03(String title) {
+	public ex02_04(String title) {
 		PaintPanel frame = new PaintPanel(this);
 		this.add(frame);
 		frame.setVisible(true);
@@ -187,9 +187,9 @@ public class ex02_03 extends JWindow implements ActionListener ,WindowListener{
 
 	class PaintPanel extends JPanel {
 		private static final long serialVersionUID = 1L;
-		ex02_03 ex02_02;
+		ex02_04 ex02_02;
 
-		public PaintPanel(ex02_03 ex02_02) {
+		public PaintPanel(ex02_04 ex02_02) {
 			this.ex02_02 = ex02_02;
 		}
 

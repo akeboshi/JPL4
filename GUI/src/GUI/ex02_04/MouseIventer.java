@@ -8,9 +8,9 @@ import java.awt.event.MouseMotionListener;
 class MouseIventer implements MouseListener,
 MouseMotionListener {
 	private Point startDrag, startPos;
-	private ex02_03 frame;
+	private ex02_04 frame;
 
-	public MouseIventer(ex02_03 ex02_02){
+	public MouseIventer(ex02_04 ex02_02){
 		this.frame = ex02_02;
 	}
 	@Override
@@ -24,7 +24,7 @@ MouseMotionListener {
 		}
 		if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) != 0) {
 			// 右
-			((ex02_03)frame).getPopup().show(frame, e.getX(), e.getY());
+			((ex02_04)frame).getPopup().show(frame, e.getX(), e.getY());
 		}
 	}
 
