@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 
 class ChangeFontSize implements ActionListener {
 
-	private ex02_03 tokei;
+	private ex02_04 tokei;
 
-	public ChangeFontSize(ex02_03 ex) {
+	public ChangeFontSize(ex02_04 ex) {
 		this.tokei = ex;
 	}
 
